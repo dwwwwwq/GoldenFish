@@ -279,7 +279,7 @@ Material:
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _RoughnessIntensity: -2.21
-    - _Smoothness: 0.416
+    - _Smoothness: 0
     - _SmoothnessRemapMax: 0.5885483
     - _SmoothnessRemapMin: 0.31597686
     - _SmoothnessTextureChannel: 0
@@ -326,9 +326,9 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
+    - _BaseColor: {r: 0.8679245, g: 0.595249, b: 0.4945532, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
+    - _Color: {r: 0.8679245, g: 0.595249, b: 0.49455315, a: 1}
     - _ColorTint: {r: 1, g: 0.9103774, b: 0.9103774, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
