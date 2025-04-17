@@ -1606,7 +1606,7 @@ MonoBehaviour:
   - inDark
   disableAfterMoves: 5
   triggerRadius: 0.6
-  triggerHeight: 0.92
+  triggerHeight: 0.85
 --- !u!1 &5255499809213620346
 GameObject:
   m_ObjectHideFlags: 0
