@@ -2,27 +2,35 @@ using UnityEngine;
 using UnityEngine.XR;
 using System.Collections;
 using Unity.XR.CoreUtils;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 
 public class PlayerMovementSystem : MonoBehaviour
 {
-    [Header("VR≈‰÷√")]
+    [Header("VRÈÖçÁΩÆ")]
     public XROrigin xrOrigin;
     public Collider leftHandCollider;
     public Collider rightHandCollider;
     public Transform head;
+    public Camera vrCamera;
 
-    [Header("“∆∂Ø≤Œ ˝")]
+    [Header("ÁßªÂä®ÂèÇÊï∞")]
     public float moveDistance = 1f;
     public float moveDuration = 0.5f;
     public int maxMoveCount = 0;
     public bool resetOnNewSession = true;
-    [Range(0f, 45f)] public float maxAngleDeviation = 45f; // –¬‘ˆ£∫◊Ó¥Û∆´¿ÎΩ«∂»
+    [Range(0f, 45f)] public float maxAngleDeviation = 45f;
 
-    [Header("¥•∑¢«¯”Ú")]
+    [Header("URP Renderer FeatureÊéßÂà∂")]
+    public UniversalRendererData rendererData;
+    public string[] featuresToDisable;
+    public int disableAfterMoves = 3;
+    private bool hasDisabledFeatures = false;
+
+    [Header("Ëß¶ÂèëÂå∫Âüü")]
     public float triggerRadius = 0.3f;
     public float triggerHeight = 0.5f;
 
-    // ‘À–– ±◊¥Ã¨
     private bool isMoving;
     private int currentMoveCount;
     private bool handsWereInTrigger;
@@ -37,11 +45,9 @@ public class PlayerMovementSystem : MonoBehaviour
     {
         if (maxMoveCount > 0 && currentMoveCount >= maxMoveCount) return;
 
-        Vector3 triggerPos = head.position + Vector3.up * triggerHeight;
-        Collider[] hits = Physics.OverlapSphere(triggerPos, triggerRadius);
-
-        bool leftHandIn = System.Array.Exists(hits, col => col == leftHandCollider);
-        bool rightHandIn = System.Array.Exists(hits, col => col == rightHandCollider);
+        Vector3 triggerPos = head.position + head.up * triggerHeight;
+        bool leftHandIn = Vector3.Distance(leftHandCollider.transform.position, triggerPos) < triggerRadius;
+        bool rightHandIn = Vector3.Distance(rightHandCollider.transform.position, triggerPos) < triggerRadius;
         bool handsInTrigger = leftHandIn && rightHandIn;
 
         if (!isMoving)
@@ -54,7 +60,6 @@ public class PlayerMovementSystem : MonoBehaviour
             {
                 if (!handsWereInTrigger)
                 {
-                    // º∆À„ª˘”⁄Õ∑≤ø≥ØœÚµƒ“∆∂Ø∑ΩœÚ
                     Vector3 moveDirection = CalculateMoveDirection();
                     StartCoroutine(MovePlayer(moveDirection));
                     requireExit = true;
@@ -67,29 +72,27 @@ public class PlayerMovementSystem : MonoBehaviour
 
     Vector3 CalculateMoveDirection()
     {
-        // ªÒ»°Õ∑≤ø«∞œÚœÚ¡ø£¨µ´∫ˆ¬‘–˝◊™µƒX∫ÕZ÷·£®÷ª±£¡ÙY÷·–˝◊™£©
-        Vector3 headForward = head.forward;
-        headForward.y = 0f; // ±£≥÷ÀÆ∆Ω∑ΩœÚ
-        headForward.Normalize();
+        Vector3 headUp = head.up;
+        float angle = Vector3.Angle(Vector3.up, headUp);
 
-        // º∆À„‘ –Ìµƒ∆´“∆∑ΩœÚ£®ª˘”⁄Õ∑≤øÀÆ∆Ω≥ØœÚ£©
-        Vector3 deviationDirection = headForward;
-
-        // œﬁ÷∆∆´“∆Ω«∂»≤ª≥¨π˝maxAngleDeviation
-        float angle = Vector3.Angle(Vector3.up, deviationDirection);
         if (angle > maxAngleDeviation)
         {
-            // »Áπ˚Ω«∂»≥¨π˝œﬁ÷∆£¨ π”√«Ú√Ê≤Â÷µœﬁ÷∆‘⁄◊Ó¥ÛΩ«∂»ƒ⁄
-            deviationDirection = Vector3.Slerp(Vector3.up, deviationDirection, maxAngleDeviation / angle);
+            headUp = Vector3.Slerp(Vector3.up, headUp, maxAngleDeviation / angle);
         }
 
-        return deviationDirection.normalized;
+        return headUp.normalized;
     }
 
     IEnumerator MovePlayer(Vector3 direction)
     {
         isMoving = true;
         currentMoveCount++;
+
+        // ÁßªÂä®ÂâçÊ£ÄÊü•ÊòØÂê¶ÈúÄË¶ÅÂÖ≥Èó≠Renderer Features
+        if (currentMoveCount >= disableAfterMoves && !hasDisabledFeatures)
+        {
+            DisableRendererFeatures();
+        }
 
         Vector3 startPos = xrOrigin.transform.position;
         Vector3 targetPos = startPos + direction * moveDistance;
@@ -105,10 +108,67 @@ public class PlayerMovementSystem : MonoBehaviour
         xrOrigin.transform.position = targetPos;
         isMoving = false;
 
-        Debug.Log($"“∆∂ØÕÍ≥… ({currentMoveCount}/{maxMoveCount}) ∑ΩœÚ: {direction}");
+        Debug.Log($"ÁßªÂä®ÂÆåÊàê ({currentMoveCount}/{maxMoveCount}) ÊñπÂêë: {direction}");
     }
 
-    public void ResetMoveCount() => currentMoveCount = 0;
+    void DisableRendererFeatures()
+    {
+        if (rendererData == null)
+        {
+            Debug.LogError("Renderer DataÊú™ÂàÜÈÖçÔºÅ");
+            return;
+        }
+
+        bool anyFeatureDisabled = false;
+
+        foreach (var featureName in featuresToDisable)
+        {
+            foreach (var feature in rendererData.rendererFeatures)
+            {
+                if (feature != null && feature.name == featureName)
+                {
+                    feature.SetActive(false);
+                    Debug.Log($"Â∑≤ÂÖ≥Èó≠Renderer Feature: {featureName}");
+                    anyFeatureDisabled = true;
+                    break;
+                }
+            }
+        }
+
+        if (anyFeatureDisabled)
+        {
+            // Êñ∞ÊñπÊ≥ïÔºöÁõ¥Êé•Ê†áËÆ∞Ê∏≤ÊüìÁÆ°Á∫øÊï∞ÊçÆ‰∏∫ËÑèÂπ∂Âº∫Âà∂ÈáçÊñ∞Âä†ËΩΩ
+            rendererData.SetDirty();
+            GraphicsSettings.renderPipelineAsset = GraphicsSettings.renderPipelineAsset;
+            hasDisabledFeatures = true;
+            Debug.Log($"Á¨¨{currentMoveCount}Ê¨°ÁßªÂä®ÂêéÔºåÂ∑≤ÂÖ≥Èó≠ÊåáÂÆöRenderer Features");
+        }
+    }
+
+    public void ResetMoveCount()
+    {
+        currentMoveCount = 0;
+        hasDisabledFeatures = false;
+
+        if (rendererData != null && featuresToDisable != null)
+        {
+            foreach (var featureName in featuresToDisable)
+            {
+                foreach (var feature in rendererData.rendererFeatures)
+                {
+                    if (feature != null && feature.name == featureName)
+                    {
+                        feature.SetActive(true);
+                        break;
+                    }
+                }
+            }
+            // Êñ∞ÊñπÊ≥ïÔºöÂêå‰∏ä
+            rendererData.SetDirty();
+            GraphicsSettings.renderPipelineAsset = GraphicsSettings.renderPipelineAsset;
+            Debug.Log("ÈáçÁΩÆÁßªÂä®ËÆ°Êï∞Âπ∂ÈáçÊñ∞ÂêØÁî®ÊâÄÊúâRenderer Features");
+        }
+    }
 
     void OnDrawGizmosSelected()
     {
@@ -117,10 +177,9 @@ public class PlayerMovementSystem : MonoBehaviour
         Gizmos.color = requireExit ? Color.yellow :
                       (maxMoveCount > 0 && currentMoveCount >= maxMoveCount) ? Color.red : Color.cyan;
 
-        Vector3 triggerPos = head.position + Vector3.up * triggerHeight;
+        Vector3 triggerPos = head.position + head.up * triggerHeight;
         Gizmos.DrawWireSphere(triggerPos, triggerRadius);
 
-        // ªÊ÷∆“∆∂Ø∑ΩœÚ
         Vector3 moveDir = CalculateMoveDirection();
         Gizmos.DrawLine(triggerPos, triggerPos + moveDir * moveDistance * 0.5f);
     }
