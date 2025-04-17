@@ -8,7 +8,7 @@ public class lookThroughGlass : MonoBehaviour
     public Camera vrCamera;             // XR 相机
     public string glassTag = "Glass";   // 玻璃球的 Tag
     public string targetTag = "Target"; // 目标物体的 Tag
-    public float maxDistance = 20f;
+    public float maxDistance = 200f;
     public string triggerObjectTag = "Glass"; 
     public float triggerDistance = 0.2f;
 
