@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3153712756287812849}
   - component: {fileID: 8201859241421629970}
   - component: {fileID: 6671697621995591292}
+  - component: {fileID: -7834932794337525814}
   m_Layer: 0
   m_Name: Food
   m_TagString: Collectible
@@ -105,3 +106,26 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-7834932794337525814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4940129836850978485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/SoundFX/Fish/FX_Food
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 1
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 125.3
+  OverrideMaxDistance: 195.03
