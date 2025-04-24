@@ -22,7 +22,30 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 0
   MaxDistance: 0
-  Length: 180009
+  Length: 170000
+--- !u!114 &-5989564454372257176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Fish/FX_Underwater
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Fish/FX_Underwater
+  guid: 86a83fdff305764a8a53a3b84c7d4a9a
+  Banks:
+  - {fileID: -5370150374887765507}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 186508
 --- !u!114 &-5370150374887765507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38,10 +61,56 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638803436942042487
+  lastModified: 638810439780000000
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &-1064332708279369688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Fish/FX_EatFood
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Fish/FX_EatFood
+  guid: 50a595dd6f30474cba58604e3456c86b
+  Banks:
+  - {fileID: -5370150374887765507}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
+--- !u!114 &-1063369016963892214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Fish/FX_Swim
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Fish/FX_Swim
+  guid: e6ed6661b264884ca983e3bd957410e5
+  Banks:
+  - {fileID: -5370150374887765507}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,12 +129,17 @@ MonoBehaviour:
   EditorEvents:
   - {fileID: 7023254034197071349}
   - {fileID: -6806086071834863833}
+  - {fileID: -1064332708279369688}
+  - {fileID: -5989564454372257176}
+  - {fileID: 9143439186718135640}
+  - {fileID: -1063369016963892214}
   EditorParameters: []
   MasterBanks:
   - {fileID: -5370150374887765507}
   StringsBanks:
   - {fileID: 5091338680707531411}
-  stringsBankWriteTime: 638803436942057581
+  - {fileID: 0}
+  stringsBankWriteTime: 638810439780000000
   cacheVersion: 6
 --- !u!114 &5091338680707531411
 MonoBehaviour:
@@ -82,11 +156,11 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638803436942057581
+  lastModified: 638810439780000000
   LoadResult: 0
   FileSizes:
   - Name: 
-    Value: 818
+    Value: 998
   Exists: 1
 --- !u!114 &7023254034197071349
 MonoBehaviour:
@@ -110,4 +184,27 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &9143439186718135640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Fish/FX_Food
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Fish/FX_Food
+  guid: a61f8686dedba244b2a256cce74d2ffd
+  Banks:
+  - {fileID: -5370150374887765507}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 8.55
   Length: 0
