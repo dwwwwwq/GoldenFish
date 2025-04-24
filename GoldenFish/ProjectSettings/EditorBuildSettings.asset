@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Samples/XR Interaction Toolkit/2.5.4/Starter Assets/DemoScene.unity
     guid: 319dafa5c80f29f428dc1e0d03f04177
+  - enabled: 1
+    path: Assets/Scenes/testVR.unity
+    guid: 996845023941eae40ba1e8f7ffd3a5bc
   m_configObjects:
     Unity.XR.PICO.LivePreview.Settings: {fileID: 11400000, guid: a497846a7f637444dbfcca5e575e3cd9,
       type: 2}
