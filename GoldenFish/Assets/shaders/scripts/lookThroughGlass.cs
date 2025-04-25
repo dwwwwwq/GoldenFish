@@ -8,9 +8,12 @@ public class lookThroughGlass : MonoBehaviour
     public Camera vrCamera;             // XR 相机
     public string glassTag = "Glass";   // 玻璃球的 Tag
     public string targetTag = "Target"; // 目标物体的 Tag
-    public float maxDistance = 200f;
+    public float maxDistance = 20f;
     public string triggerObjectTag = "Glass"; 
     public float triggerDistance = 0.2f;
+
+    float requiredTime = 2.5f;  // 需要持续的时间，单位秒
+    float timeSeeingThroughGlass = 0f;  // 用于计时
 
     public GameObject frosted;  // 要隐藏的对象
     public GameObject glass;   // 要显示的对象
@@ -21,8 +24,21 @@ public class lookThroughGlass : MonoBehaviour
     bool hitTarget = false;
     bool hitGlass = false;
     bool isSeeingThroughGlass = false;
-    
 
+    public ParticleSystem particleEffect; // 粒子效果引用
+
+    
+    void Start()
+    {
+        if (particleEffect != null)
+        {
+            particleEffect.Stop(); // 确保粒子效果一开始是停止状态
+             particleEffect.gameObject.SetActive(false);  // 确保一开始粒子系统不可见
+            var main = particleEffect.main;  // 获取粒子系统的 main 模块
+            main.simulationSpeed = 0.27f;   // 设置播放速度为 0.15
+        }
+    }
+    
     void Update()
     {
         hitGlass = false;
@@ -65,27 +81,48 @@ public class lookThroughGlass : MonoBehaviour
                 Debug.Log("✅ 刚刚开始透过玻璃看到目标了！");
                 if (frosted != null) frosted.SetActive(false);
                 if (glass != null) glass.SetActive(true);
+                if (particleEffect != null)
+                {
+                    particleEffect.gameObject.SetActive(true); // 激活粒子效果
+                    particleEffect.Play();
+                }
             }
             else
             {
+                timeSeeingThroughGlass = 0f;
                 Debug.Log("❌ 不再透过玻璃看到目标了！");
                 if (frosted != null) frosted.SetActive(true);
                 if (glass != null) glass.SetActive(false);
+                if (particleEffect != null)
+                {
+                    particleEffect.Stop();  // 停止粒子效果
+                    particleEffect.gameObject.SetActive(false); // 隐藏粒子效果
+                }
             }
         }
 
         if (isSeeingThroughGlass)
         {
-            GameObject targetObject = GameObject.FindGameObjectWithTag(glassTag);
-            if (targetObject != null)
+
+            // 增加计时
+            timeSeeingThroughGlass += Time.deltaTime;
+
+            if (timeSeeingThroughGlass >= requiredTime)
             {
-                float distance = Vector3.Distance(vrCamera.transform.position, targetObject.transform.position);
-                if (distance <= triggerDistance) // 如果距离小于设定的阈值
-                {
-                    Debug.Log("🌟 目标物体足够近，切换场景！");
-                    SceneManager.LoadScene(nextSceneName); // 记得换成你的目标场景名
-                }
+                Debug.Log("🌟 持续透过玻璃2秒，切换场景！");
+                SceneManager.LoadScene(nextSceneName); // 切换场景
             }
+
+            // GameObject targetObject = GameObject.FindGameObjectWithTag(glassTag);
+            // if (targetObject != null)
+            // {
+            //     float distance = Vector3.Distance(vrCamera.transform.position, targetObject.transform.position);
+            //     if (distance <= triggerDistance) // 如果距离小于设定的阈值
+            //     {
+            //         Debug.Log("🌟 目标物体足够近，切换场景！");
+            //         SceneManager.LoadScene(nextSceneName); // 记得换成你的目标场景名
+            //     }
+            // }
         }
     }
 
