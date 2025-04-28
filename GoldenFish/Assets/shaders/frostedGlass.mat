@@ -110,7 +110,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DisortStrength: 1.6
+    - _DisortStrength: 1.48
     - _DistortionOnTexture: 0.005
     - _DstBlend: 10
     - _DstBlendAlpha: 10
@@ -118,21 +118,21 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Metallic: 0.175
-    - _NormalStrength: 2.3
+    - _Metallic: 0.336
+    - _NormalStrength: 2.92
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ReflectionStrength: 0.23
-    - _Smoothness: 0.708
+    - _Smoothness: 0.739
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 1
-    - _Tiling: 469
+    - _Tiling: 517
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
@@ -141,5 +141,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _TintColor: {r: 0.8930817, g: 0.92075473, b: 1, a: 1}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

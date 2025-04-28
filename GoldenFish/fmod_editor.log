@@ -1,12 +1,13 @@
 [LOG] System::create                           : Header version = 2.01.09. Current version = 2.01.09.
-[LOG] Manager::init                            : maxchannels = 256 studioflags = 00000006 flags 00000000 extradriverdata 0x0.
+[LOG] Manager::init                            : maxchannels = 256 studioflags = 00000006 flags 00000000 extradriverdata 0000000000000000.
 [LOG] SystemI::init                            : Initialize version=20109 (115889), maxchannels=256, flags=0x00020000
-[LOG] SystemI::setOutputInternal               : Setting output to 'FMOD Core Audio Output'
-[LOG] OutputCoreAudio::init                    : Output running 2 channels at 48000Hz sample rate.
-[LOG] OutputCoreAudio::init                    : Maximum hardware read size: 1024 samples, Software buffer size: 512 samples, Number of software buffers: 4.
+[LOG] SystemI::setOutputInternal               : Setting output to 'FMOD WASAPI Output'
+[LOG] OutputWASAPI::init                       : Mix Format (WAVEFORMATEX): wFormatTag=0xFFFE, nChannels=2, nSamplesPerSec=48000, nAvgBytesPerSec=384000, nBlockAlign=8, wBitsPerSample=32, cbSize=22.
+[LOG] OutputWASAPI::init                       : Mix Format (WAVEFORMATEXTENSIBLE): wValidBitsPerSample=32, dwChannelMask=0x00000003, SubFormat=00000003-0000-0010-8000-00AA00389B71.
+[LOG] OutputWASAPI::init                       : Output buffer size: 4096 samples, latency: 0.00ms, period: 10.00ms, DSP buffer: 1024 * 4
 [LOG] Thread::initThread                       : Init FMOD stream thread. Affinity: 0x8000000000000003, Priority: 0xFFFF7FFB, Stack Size: 98304, Semaphore: No, Sleep Time: 10, Looping: Yes.
-[LOG] Thread::initThread                       : Init FMOD mixer thread. Affinity: 0x8000000000000001, Priority: 0xFFFF7FFA, Stack Size: 81920, Semaphore: Yes, Sleep Time: 0, Looping: Yes.
-[LOG] AsyncManager::init                       : manager 0x7f915e7fdc08 isAsync 0 updatePeriod 0.02
+[LOG] Thread::initThread                       : Init FMOD mixer thread. Affinity: 0x8000000000000001, Priority: 0xFFFF7FFA, Stack Size: 81920, Semaphore: No, Sleep Time: 0, Looping: Yes.
+[LOG] AsyncManager::init                       : manager 0000025A2F32E3A8 isAsync 0 updatePeriod 0.02
 [LOG] AsyncManager::init                       : done
 [LOG] PlaybackSystem::init                     : 
 [LOG] Thread::initThread                       : Init FMOD Studio sample load thread. Affinity: 0x8000000000000003, Priority: 0xFFFF7FFD, Stack Size: 98304, Semaphore: No, Sleep Time: 1, Looping: No.
@@ -15,15 +16,77 @@
 [LOG] Manager::init                            : done.
 [LOG] Manager::readBank                        : fileversion = 135, compatVersion = 132 (oldest = 44, newest = 135)
 [LOG] Manager::readBank                        : fileversion = 135, compatVersion = 132 (oldest = 44, newest = 135)
-[LOG] Manager::readBank                        : fileversion = 135, compatVersion = 132 (oldest = 44, newest = 135)
-[LOG] PlaybackSystem::acquireMasterBus         : Setting master channel group format to 6
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 4096 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 0 / 16384 bytes available.
-[WRN] OutputRingBuffer::read                   : Buffer starvation detected, requested 8192 bytes, 4096 / 16384 bytes available.
+[LOG] SystemI::createSoundInternal             : Create name='', mode=0x02000202
+[LOG] SystemI::createSoundInternal             : exinfo->cbsize             = 224
+[LOG] SystemI::createSoundInternal             : exinfo->length             = 3958496
+[LOG] SystemI::createSoundInternal             : exinfo->fileoffset         = 24320
+[LOG] SystemI::createSoundInternal             : exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             : exinfo->inclusionlist      = 000000C5637EF2C8
+[LOG] SystemI::createSoundInternal             : exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             : exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             : exinfo->useropen           = 00007FFB8C627D70
+[LOG] SystemI::createSoundInternal             : exinfo->userclose          = 00007FFB8C627D40
+[LOG] SystemI::createSoundInternal             : exinfo->userread           = 00007FFB8C627E40
+[LOG] SystemI::createSoundInternal             : exinfo->userseek           = 00007FFB8C627F00
+[LOG] SystemI::createSoundInternal             : exinfo->fileuserdata       = 0000025C70515688
+[LOG] SystemI::createSoundInternal             : exinfo->initialseekpostype = 1
+[LOG] SystemI::DSPCodecPoolRegister            : register codec pool for pool type 5
+[LOG] SystemI::createSoundInternal             : Sample 0/1: name='160118__jorickhoofd__dropping-medium-sized-stone-in-still-surface-water', format=5, channels=2, frequency=48000, lengthbytes=20032, lengthpcm=72674, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.041199.
+[LOG] SystemI::createSound                     : filename = Assets/Audio/Desktop/Master.bank : mode 02010082
+[LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSound                     : setdata soundi = 0000025A4752F948 : node = 0000025AC0B47220
+[LOG] SystemI::createSound                     : add node to async list : head = 0000025847C80C58.  list count = 0
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0000025A4752F948
+[LOG] SystemI::createSoundInternal             :     Create name='Assets/Audio/Desktop/Master.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 224
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 3958496
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 24320
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000025AC0B47330
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='GoldenFish', format=5, channels=2, frequency=48000, lengthbytes=2086464, lengthpcm=8160000, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=1.001965.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0000025A4752F948
+[LOG] SoundI::release                          : GoldenFish (0000025849F6EAB8)
+[LOG] SoundI::release                          :     GoldenFish (0000025A3079FB98)
+[LOG] SoundI::release                          :     GoldenFish (0000025B2AB9A388)
+[LOG] SystemI::createSound                     : filename = Assets/Audio/Desktop/Master.bank : mode 02010082
+[LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSound                     : setdata soundi = 0000025BDE11E1E8 : node = 0000025849459A40
+[LOG] SystemI::createSound                     : add node to async list : head = 0000025847C80C58.  list count = 0
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0000025BDE11E1E8
+[LOG] SystemI::createSoundInternal             :     Create name='Assets/Audio/Desktop/Master.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 224
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 3958496
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 24320
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000025849459B50
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='197751__wjoojoo__underwater_ambience_lake_lbj_08232013_1', format=5, channels=2, frequency=48000, lengthbytes=1700288, lengthpcm=8952385, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.886322.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0000025BDE11E1E8
+[LOG] SoundI::release                          : 197751__wjoojoo__underwater_ambience_lake_lbj_08232013_1 (0000025849F6EC68)
+[LOG] SoundI::release                          :     197751__wjoojoo__underwater_ambience_lake_lbj_08232013_1 (0000025A3079EE98)
+[LOG] SoundI::release                          :     197751__wjoojoo__underwater_ambience_lake_lbj_08232013_1 (0000025B2AB997B8)
+[LOG] SoundI::release                          : GoldenFish (0000025A4752F948)
+[LOG] SoundI::release                          :     GoldenFish (00000259C310DB28)
+[LOG] SoundI::release                          :     GoldenFish (0000025846F910E8)
+[LOG] SoundI::release                          : 197751__wjoojoo__underwater_ambience_lake_lbj_08232013_1 (0000025BDE11E1E8)
+[LOG] SoundI::release                          :     197751__wjoojoo__underwater_ambience_lake_lbj_08232013_1 (0000025A2D7BBAE8)
+[LOG] SoundI::release                          :     197751__wjoojoo__underwater_ambience_lake_lbj_08232013_1 (0000025BB3DA8238)
+[LOG] SoundI::release                          :  (0000025B40990E28)
+[LOG] SoundI::release                          :     567451__sound_ahead__bubbles_light (0000025B2A5843E8)
+[LOG] SoundI::release                          :  (000002584631EA08)
+[LOG] SoundI::release                          :     160118__jorickhoofd__dropping-medium-sized-stone-in-still-surface-water (0000025B3EAB53E8)
+[LOG] Thread::callback                         : FMOD Studio update thread finished.
+[LOG] Thread::callback                         : FMOD Studio bank load thread finished.
+[LOG] Profile::disconnectAll                   : Profiler disconnecting all clients
+[LOG] Thread::callback                         : FMOD Studio sample load thread finished.
+[LOG] LiveUpdate::release                      : 
+[LOG] LiveUpdate::reset                        : Reset connection (reason Disconnected)
+[LOG] Thread::callback                         : FMOD stream thread finished.
+[LOG] Thread::callback                         : FMOD mixer thread finished.
+[LOG] Profile::disconnectAll                   : Profiler disconnecting all clients
+[LOG] SystemI::close                           : Closed.
