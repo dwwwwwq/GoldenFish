@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:GoldenFish/Assets/New Material 3.mat.meta
 guid: fe05349ff9f7b154a9d4bd111f5d9df6
+========
+guid: e8db77d5a611a0c4f83bfc207f5b743e
+>>>>>>>> 23314710a77378b3ed7d9e7acbd3039f2c1ce8af:GoldenFish/Assets/New Material 2.mat.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 2100000
