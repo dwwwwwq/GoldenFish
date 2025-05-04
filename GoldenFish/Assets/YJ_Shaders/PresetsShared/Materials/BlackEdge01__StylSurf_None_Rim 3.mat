@@ -106,7 +106,7 @@ Material:
     - _FlatRimEdgeSmoothness: 0.549
     - _FlatRimEnabled: 1
     - _FlatRimLightAlign: 0
-    - _FlatRimSize: 0.702
+    - _FlatRimSize: 0.097
     - _FlatShadowsEnabled: 1
     - _FlatSmoothness: 0.362
     - _FlatSpecularEdgeSmoothness: 0.5
