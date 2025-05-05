@@ -801,7 +801,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a1f07dc5afe854f9f12a4194aca3fb, type: 3}
   m_Name: WebGL
   m_EditorClassIdentifier: 
-  features: []
+
+  features:
+  - {fileID: -6852664233502647288}
+  - {fileID: 5588714179677267996}
+  - {fileID: 76538286268823055}
+  - {fileID: 7295740829831881001}
+  - {fileID: -514379318643572600}
+  - {fileID: 2609138905766990379}
+  - {fileID: 2181117779154909224}
+  - {fileID: -6629096786566924569}
+  - {fileID: 5907242065384853567}
+  - {fileID: 5138965497327036827}
+  - {fileID: 4737378988703814336}
+  - {fileID: 5360559477527760443}
+  - {fileID: -1095417160119638943}
+  - {fileID: 1570710095368990793}
+  - {fileID: 4373024234604220415}
+  - {fileID: -8976441133455548709}
+
   m_renderMode: 1
   m_depthSubmissionMode: 0
 --- !u!114 &1517618064228559188

@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 57f6ec90e7d0f50428805bcd53aad343
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - halftoneMaterial: {fileID: 2100000, guid: 8b7181f2b873e834cb59ebd66c64808e, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
