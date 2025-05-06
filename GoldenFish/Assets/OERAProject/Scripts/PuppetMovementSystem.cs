@@ -30,6 +30,12 @@ public class FixedZonePuppetMovement : MonoBehaviour
     public Color rightReadyColor = Color.magenta;
     public Color rightWaitingColor = Color.gray;
 
+    [Header("步行动画参数")]
+    public float upwardDistance = 0.1f; // 向上移动的距离
+    public float upwardDurationRatio = 0.3f; // 向上移动所占的时间比例
+    public float downwardDurationRatio = 0.7f; // 向下移动所占的时间比例
+
+
     [Header("调试")]
     public bool showZones = true;
 
@@ -96,20 +102,43 @@ public class FixedZonePuppetMovement : MonoBehaviour
         Vector3 startPos = xrOrigin.transform.position;
         Vector3 moveDir = head.forward;
         moveDir.y = 0;
-        Vector3 targetPos = startPos + moveDir.normalized * stepDistance;
+        Vector3 horizontalTarget = startPos + moveDir.normalized * stepDistance;
 
+        // 计算上下移动的幅度
+        float totalHeightChange = upwardDistance;
+        float upwardDuration = stepDuration * upwardDurationRatio;
+        float downwardDuration = stepDuration * downwardDurationRatio;
+
+        // 第一阶段：向上移动
         float elapsed = 0f;
-        while (elapsed < stepDuration)
+        Vector3 upwardTarget = startPos + moveDir.normalized * (stepDistance * upwardDurationRatio)
+                              + Vector3.up * totalHeightChange;
+
+        while (elapsed < upwardDuration)
         {
             xrOrigin.transform.position = Vector3.Lerp(
                 startPos,
-                targetPos,
-                Mathf.SmoothStep(0, 1, elapsed / stepDuration));
+                upwardTarget,
+                Mathf.SmoothStep(0, 1, elapsed / upwardDuration));
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        xrOrigin.transform.position = targetPos;
+        // 第二阶段：向下移动回到水平位置
+        elapsed = 0f;
+        Vector3 finalTarget = new Vector3(horizontalTarget.x, startPos.y, horizontalTarget.z);
+
+        while (elapsed < downwardDuration)
+        {
+            xrOrigin.transform.position = Vector3.Lerp(
+                upwardTarget,
+                finalTarget,
+                Mathf.SmoothStep(0, 1, elapsed / downwardDuration));
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        xrOrigin.transform.position = finalTarget;
 
         // 切换前后位置
         isForwardPosition = !isForwardPosition;
