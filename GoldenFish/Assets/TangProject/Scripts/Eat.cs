@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using FMODUnity;
 
 public class Eat : MonoBehaviour
 {
@@ -9,6 +9,8 @@ public class Eat : MonoBehaviour
     public GameObject fallingObject; // 需要下落的物体
     public float fallDistance = 10f; // 下落的距离
     public float fallSpeed = 5f; // 下落的速度
+
+    [EventRef] public string catchSoundEvent;
 
     private bool objectFalling = false; // 判断物体是否已经开始下落
 
@@ -20,6 +22,7 @@ public class Eat : MonoBehaviour
         {
             // 增加计数器
             score++;
+            RuntimeManager.PlayOneShot(catchSoundEvent);
 
             // 输出当前分数
             Debug.Log("Score: " + score);

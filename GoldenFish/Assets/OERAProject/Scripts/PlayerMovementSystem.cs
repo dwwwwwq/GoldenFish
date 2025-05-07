@@ -4,6 +4,7 @@ using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
+using FMODUnity;
 
 public class PlayerMovementSystem : MonoBehaviour
 {
@@ -40,6 +41,8 @@ public class PlayerMovementSystem : MonoBehaviour
     private bool handsWereInTrigger;
     private bool requireExit;
 
+    [EventRef] public string catchSoundEvent;
+
     void Start()
     {
         if (resetOnNewSession) currentMoveCount = 0;
@@ -48,7 +51,7 @@ public class PlayerMovementSystem : MonoBehaviour
     void Update()
     {
         if (maxMoveCount > 0 && currentMoveCount >= maxMoveCount) return;
-
+;
         Vector3 triggerPos = head.position + head.up * triggerHeight;
         bool leftHandIn = Vector3.Distance(leftHandCollider.transform.position, triggerPos) < triggerRadius;
         bool rightHandIn = Vector3.Distance(rightHandCollider.transform.position, triggerPos) < triggerRadius;
@@ -64,6 +67,7 @@ public class PlayerMovementSystem : MonoBehaviour
             {
                 if (!handsWereInTrigger)
                 {
+                    RuntimeManager.PlayOneShot(catchSoundEvent);
                     Vector3 moveDirection = CalculateMoveDirection();
                     StartCoroutine(MovePlayer(moveDirection));
                     requireExit = true;
