@@ -31,6 +31,10 @@ public class PlayerMovementSystem : MonoBehaviour
     public float triggerRadius = 0.3f;
     public float triggerHeight = 0.5f;
 
+    [Header("阶段触发物体")]
+    public GameObject objectToEnableOn2ndMove;
+    public GameObject objectToEnableOn5thMove;
+
     private bool isMoving;
     private int currentMoveCount;
     private bool handsWereInTrigger;
@@ -88,6 +92,18 @@ public class PlayerMovementSystem : MonoBehaviour
         isMoving = true;
         currentMoveCount++;
 
+        // 第2次与第5次移动时启用指定物体
+        if (currentMoveCount == 2 && objectToEnableOn2ndMove != null)
+        {
+            objectToEnableOn2ndMove.SetActive(true);
+            Debug.Log("第2次移动时启用了指定物体");
+        }
+        else if (currentMoveCount == 5 && objectToEnableOn5thMove != null)
+        {
+            objectToEnableOn5thMove.SetActive(true);
+            Debug.Log("第5次移动时启用了指定物体");
+        }
+
         // 移动前检查是否需要关闭Renderer Features
         if (currentMoveCount >= disableAfterMoves && !hasDisabledFeatures)
         {
@@ -137,7 +153,6 @@ public class PlayerMovementSystem : MonoBehaviour
 
         if (anyFeatureDisabled)
         {
-            // 新方法：直接标记渲染管线数据为脏并强制重新加载
             rendererData.SetDirty();
             GraphicsSettings.renderPipelineAsset = GraphicsSettings.renderPipelineAsset;
             hasDisabledFeatures = true;
@@ -163,7 +178,6 @@ public class PlayerMovementSystem : MonoBehaviour
                     }
                 }
             }
-            // 新方法：同上
             rendererData.SetDirty();
             GraphicsSettings.renderPipelineAsset = GraphicsSettings.renderPipelineAsset;
             Debug.Log("重置移动计数并重新启用所有Renderer Features");
