@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using System.Collections;
 using Unity.XR.CoreUtils;
+using FMODUnity;
 
 public class RedLightGreenLightGame : MonoBehaviour
 {
@@ -50,6 +51,9 @@ public class RedLightGreenLightGame : MonoBehaviour
     private bool isFacingPlayer = false;
     private float currentGreenLightDuration;
     private float currentRedLightDuration;
+
+    [Header("FMOD设置")]
+    [EventRef] public string alarm;
 
     void Start()
     {
@@ -139,9 +143,11 @@ public class RedLightGreenLightGame : MonoBehaviour
         stateTimer = warningDuration;
         directionalLight.intensity = dimIntensity;
         directionalLight.color = warningColor;
+        RuntimeManager.PlayOneShot(alarm);
         Debug.Log("警告! 玩具熊即将转身");
         yield return new WaitForSeconds(warningDuration);
         StartCoroutine(TurnToFacePlayer());
+        
     }
 
     IEnumerator TurnToFacePlayer()

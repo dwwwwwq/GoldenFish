@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using System.Collections;
 using Unity.XR.CoreUtils;
+using FMODUnity;
 
 public class FixedZonePuppetMovement : MonoBehaviour
 {
@@ -45,6 +46,9 @@ public class FixedZonePuppetMovement : MonoBehaviour
     private float lastStepTime;
     private bool isForwardPosition = true; // 当前是否是前方位置
 
+    [Header("FMOD设置")]
+    [EventRef] public string footstep;
+
     void Start()
     {
         CreateZones();
@@ -81,6 +85,7 @@ public class FixedZonePuppetMovement : MonoBehaviour
         if (leftInZone && rightInZone)
         {
             StartCoroutine(PerformStep());
+            RuntimeManager.PlayOneShot(footstep);
         }
     }
 
@@ -98,6 +103,7 @@ public class FixedZonePuppetMovement : MonoBehaviour
     {
         isMoving = true;
         lastStepTime = Time.time;
+        
 
         Vector3 startPos = xrOrigin.transform.position;
         Vector3 moveDir = head.forward;
