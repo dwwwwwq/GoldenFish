@@ -78,7 +78,7 @@ MonoBehaviour:
     color: {r: 0.011213932, g: 0.05356228, b: 0.254717, a: 0}
     distance: 100
     alpha: 0.347
-    refraction: 1.89
+    refraction: 1
     normalmap: {fileID: 2800000, guid: 08ef20a01c156e1428ca81211ca1275d, type: 3}
     UV: {x: 1, y: 1, z: 0.2, w: 0.1}
 --- !u!114 &-1878332245247344467
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: inLight
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   passMaterial: {fileID: 2100000, guid: 47c9856b8e3c2794facd800118afcb25, type: 2}
   injectionPoint: 600
   requirements: 4
