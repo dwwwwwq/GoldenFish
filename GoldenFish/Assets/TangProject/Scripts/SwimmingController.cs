@@ -1,4 +1,5 @@
 using UnityEngine;
+using FMODUnity;
 
 public class SwimmingController : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class SwimmingController : MonoBehaviour
 
     private bool hasFirstFlapOccurred = false;
 
+    [EventRef] public string catchSoundEvent;
     private void Start()
     {
         playerRigidbody = GetComponent<Rigidbody>();
@@ -81,10 +83,12 @@ public class SwimmingController : MonoBehaviour
                 if (leftRotationDelta > strongFlapThreshold && rightRotationDelta > strongFlapThreshold)
                 {
                     Flap(strongFlapForce); // Strong flap
+                    RuntimeManager.PlayOneShot(catchSoundEvent);
                 }
                 else
                 {
                     Flap(lightFlapForce); // Light flap
+                    RuntimeManager.PlayOneShot(catchSoundEvent);
                 }
             }
             lastSwingTime = Time.time;
