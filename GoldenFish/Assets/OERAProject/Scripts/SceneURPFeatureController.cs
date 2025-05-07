@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.Rendering; // 新增的命名空间
+using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class SceneURPFeatureController : MonoBehaviour
@@ -10,8 +11,12 @@ public class SceneURPFeatureController : MonoBehaviour
     [Header("本场景需要的 Features")]
     public string[] featuresToEnable;
 
+    [Header("需要启用的 RenderObjects 特性")]
+    public string[] renderObjectsToEnable;
+
     [Header("操作模式")]
     public bool disableOtherFeatures = true;
+    public bool disableOtherRenderObjects = true;
 
     void Start()
     {
@@ -25,6 +30,7 @@ public class SceneURPFeatureController : MonoBehaviour
 
     public void ApplyFeatures()
     {
+        // 处理普通特性
         foreach (var feature in rendererData.rendererFeatures)
         {
             if (feature == null) continue;
@@ -33,13 +39,21 @@ public class SceneURPFeatureController : MonoBehaviour
             feature.SetActive(disableOtherFeatures ? shouldEnable : feature.isActive || shouldEnable);
         }
 
+        // 特殊处理 RenderObjects 特性
+        foreach (var feature in rendererData.rendererFeatures)
+        {
+            if (feature is RenderObjects renderObjectsFeature)
+            {
+                bool shouldEnable = System.Array.Exists(renderObjectsToEnable, name => name == renderObjectsFeature.name);
+                renderObjectsFeature.SetActive(disableOtherRenderObjects ? shouldEnable : renderObjectsFeature.isActive || shouldEnable);
+            }
+        }
+
         rendererData.SetDirty();
-        // 替换原来的 GraphicsSettings 刷新方式
         ForcePipelineUpdate();
         Debug.Log($"已应用场景 {gameObject.scene.name} 的配置");
     }
 
-    // 新的管线刷新方法
     private void ForcePipelineUpdate()
     {
         var pipeline = GraphicsSettings.renderPipelineAsset;
@@ -51,7 +65,15 @@ public class SceneURPFeatureController : MonoBehaviour
     void PrintFeatures()
     {
         if (rendererData == null) return;
+
+        Debug.Log("=== 普通特性 ===");
         foreach (var f in rendererData.rendererFeatures)
-            if (f != null) Debug.Log($"{f.name} : {(f.isActive ? "启用" : "禁用")}");
+            if (f != null && !(f is RenderObjects))
+                Debug.Log($"{f.name} : {(f.isActive ? "启用" : "禁用")}");
+
+        Debug.Log("=== RenderObjects 特性 ===");
+        foreach (var f in rendererData.rendererFeatures)
+            if (f is RenderObjects)
+                Debug.Log($"{f.name} : {(f.isActive ? "启用" : "禁用")}");
     }
 }

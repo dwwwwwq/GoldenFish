@@ -1,6 +1,8 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7444566998804914984
+
+--- !u!114 &-7035357454128958245
+
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,12 +12,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SoundFX/Fish/FX_EatFood
+  m_Name: event:/SoundFX/Plant/FX_GrowUp
   m_EditorClassIdentifier: 
-  Path: event:/SoundFX/Fish/FX_EatFood
-  guid: 50a595dd6f30474cba58604e3456c86b
+  Path: event:/SoundFX/Plant/FX_GrowUp
+  guid: 75c12b32a32df94bac5b107785b9730d
   Banks:
-  - {fileID: -4248971345914921615}
+  - {fileID: -3825605281930559911}
+
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -23,7 +26,9 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 0
+
 --- !u!114 &-4248971345914921615
+
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -32,17 +37,69 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
+
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Fish/FX_Swim
   m_EditorClassIdentifier: 
-  Path: Assets/Audio/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 638810439780000000
-  LoadResult: 0
-  FileSizes: []
-  Exists: 1
---- !u!114 &11400000
+  Path: event:/SoundFX/Fish/FX_Swim
+  guid: e6ed6661b264884ca983e3bd957410e5
+  Banks:
+  - {fileID: -3825605281930559911}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
+--- !u!114 &-5810055699721679999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BGM/BGM_Chime
+  m_EditorClassIdentifier: 
+  Path: event:/BGM/BGM_Chime
+  guid: 8024a5223ed5ff4eac938fa7959bb148
+  Banks:
+  - {fileID: -3825605281930559911}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 156144
+--- !u!114 &-4322604990369973840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Chime/FX_BellRing
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Chime/FX_BellRing
+  guid: cfa989999ec8d749921f0c3c290e8b63
+  Banks:
+  - {fileID: -3825605281930559911}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
+--- !u!114 &-3825605281930559911
+
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,24 +111,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
-  EditorBanks:
-  - {fileID: 6549999529243434815}
-  - {fileID: -4248971345914921615}
-  EditorEvents:
-  - {fileID: 2011041756055903951}
-  - {fileID: -7444566998804914984}
-  - {fileID: 8720742036155297211}
-  - {fileID: 2479836221884029000}
-  - {fileID: 3794870264527919159}
-  - {fileID: 7783518020132563046}
-  EditorParameters: []
-  MasterBanks:
-  - {fileID: -4248971345914921615}
-  StringsBanks:
-  - {fileID: 6549999529243434815}
-  stringsBankWriteTime: 638810439780000000
-  cacheVersion: 6
---- !u!114 &2011041756055903951
+
+  Path: Assets/Audio/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638822483499316753
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-2263987712054801757
+
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -81,35 +130,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SoundFX/FX_GlassBall
-  m_EditorClassIdentifier: 
-  Path: event:/SoundFX/FX_GlassBall
-  guid: 3722f6d92f216442a050d4249cdccfcf
-  Banks:
-  - {fileID: -4248971345914921615}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &2479836221884029000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+
   m_Name: event:/BGM/BGM_GoldenFish
   m_EditorClassIdentifier: 
   Path: event:/BGM/BGM_GoldenFish
   guid: 908acb07139661468104f087c99f0932
   Banks:
-  - {fileID: -4248971345914921615}
+  - {fileID: -3825605281930559911}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -117,7 +144,33 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 170000
---- !u!114 &3794870264527919159
+--- !u!114 &-1043121432367580421
+
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+
+  m_Name: event:/SoundFX/Fish/FX_Food
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Fish/FX_Food
+  guid: a61f8686dedba244b2a256cce74d2ffd
+  Banks:
+  - {fileID: -3825605281930559911}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 8.55
+  Length: 0
+--- !u!114 &11400000
+
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,62 +182,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
   m_Name: event:/SoundFX/Fish/FX_Food
   m_EditorClassIdentifier: 
-  Path: event:/SoundFX/Fish/FX_Food
-  guid: a61f8686dedba244b2a256cce74d2ffd
-  Banks:
-  - {fileID: -4248971345914921615}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 0
-  MaxDistance: 8.55
-  Length: 0
---- !u!114 &6549999529243434815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
-  m_EditorClassIdentifier: 
-  Path: Assets/Audio/Desktop/Master.strings.bank
-  Name: Master.strings
-  StudioPath: bank:/Master.strings
-  lastModified: 638810439780000000
-  LoadResult: 0
-  FileSizes:
-  - Name: 
-    Value: 998
-  Exists: 1
---- !u!114 &7783518020132563046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SoundFX/Fish/FX_Swim
-  m_EditorClassIdentifier: 
-  Path: event:/SoundFX/Fish/FX_Swim
-  guid: e6ed6661b264884ca983e3bd957410e5
-  Banks:
-  - {fileID: -4248971345914921615}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 0
---- !u!114 &8720742036155297211
+
+  EditorBanks:
+  - {fileID: 6878135997037544029}
+  - {fileID: -3825605281930559911}
+  EditorEvents:
+  - {fileID: 7755845488792594504}
+  - {fileID: 6556032891242347462}
+  - {fileID: 2816195555388059030}
+  - {fileID: -2263987712054801757}
+  - {fileID: -1043121432367580421}
+  - {fileID: -6525018003404655650}
+  - {fileID: -5810055699721679999}
+  - {fileID: -7035357454128958245}
+  - {fileID: -4322604990369973840}
+  - {fileID: 6900944568458767076}
+  - {fileID: 3887246922497451138}
+  EditorParameters: []
+  MasterBanks:
+  - {fileID: -3825605281930559911}
+  StringsBanks:
+  - {fileID: 6878135997037544029}
+  stringsBankWriteTime: 638822483499592822
+  cacheVersion: 6
+--- !u!114 &2816195555388059030
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,7 +220,7 @@ MonoBehaviour:
   Path: event:/SoundFX/Fish/FX_Underwater
   guid: 86a83fdff305764a8a53a3b84c7d4a9a
   Banks:
-  - {fileID: -4248971345914921615}
+  - {fileID: -3825605281930559911}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -207,3 +228,127 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 186508
+--- !u!114 &3887246922497451138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Puppet/FX_Footstep
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Puppet/FX_Footstep
+  guid: f09b67e4f6da8444bd87423f2fa0916f
+  Banks:
+  - {fileID: -3825605281930559911}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
+--- !u!114 &6556032891242347462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Fish/FX_EatFood
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Fish/FX_EatFood
+  guid: 50a595dd6f30474cba58604e3456c86b
+  Banks:
+  - {fileID: -3825605281930559911}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
+--- !u!114 &6878135997037544029
+
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+
+  lastModified: 638810439780000000
+
+  LoadResult: 0
+  FileSizes:
+  - Name: 
+    Value: 1260
+  Exists: 1
+
+--- !u!114 &7783518020132563046
+
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+
+  m_Name: event:/SoundFX/Puppet/FX_Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Puppet/FX_Alarm
+  guid: 0071521beb4c0e4d96e98024bf426dac
+  Banks:
+  - {fileID: -3825605281930559911}
+
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
+
+--- !u!114 &8720742036155297211
+
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+
+  m_Name: event:/SoundFX/FX_GlassBall
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/FX_GlassBall
+  guid: 3722f6d92f216442a050d4249cdccfcf
+  Banks:
+  - {fileID: -3825605281930559911}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 10
+  MaxDistance: 70
+  Length: 0
+

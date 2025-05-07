@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
+using FMODUnity; // 添加FMOD命名空间
 
 public class WindChimeGame : MonoBehaviour
 {
@@ -16,8 +17,15 @@ public class WindChimeGame : MonoBehaviour
     public float catchRadius = 0.3f; // 捕捉半径
 
     [Header("效果设置")]
-    public AudioClip catchSound;
     public ParticleSystem catchEffect;
+
+    [Header("FMOD设置")]
+    [EventRef] public string catchSoundEvent; // FMOD事件路径
+
+    [Header("游戏设置")]
+    public int maxCatches = 10; // 最大捕捉次数
+    private int currentCatches = 0; // 当前捕捉次数
+    private bool gameActive = true; // 游戏是否进行中
 
     private float nextSpawnTime;
 
@@ -28,6 +36,8 @@ public class WindChimeGame : MonoBehaviour
 
     void Update()
     {
+        if (!gameActive) return;
+
         // 生成新的风粒子
         if (Time.time >= nextSpawnTime)
         {
@@ -82,15 +92,27 @@ public class WindChimeGame : MonoBehaviour
 
     void CatchWind(GameObject wind, Vector3 catchPosition)
     {
-        // 播放音效
-        if (catchSound != null)
-            AudioSource.PlayClipAtPoint(catchSound, catchPosition);
+        // 播放FMOD音效
+        if (!string.IsNullOrEmpty(catchSoundEvent))
+        {
+            RuntimeManager.PlayOneShot(catchSoundEvent, catchPosition);
+        }
 
         // 播放粒子效果
         if (catchEffect != null)
         {
             ParticleSystem effect = Instantiate(catchEffect, catchPosition, Quaternion.identity);
             Destroy(effect.gameObject, 2f);
+        }
+
+        // 增加捕捉计数
+        currentCatches++;
+
+        // 检查是否达到最大捕捉次数
+        if (currentCatches >= maxCatches)
+        {
+            gameActive = false;
+            Debug.Log("游戏结束！已达到最大捕捉次数");
         }
 
         // 销毁风粒子
