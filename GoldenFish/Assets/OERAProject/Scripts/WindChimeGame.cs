@@ -1,33 +1,49 @@
 using UnityEngine;
 using UnityEngine.XR;
-using FMODUnity; // Ìí¼ÓFMODÃüÃû¿Õ¼ä
+using FMODUnity;
+using System.Collections;
 
 public class WindChimeGame : MonoBehaviour
 {
-    [Header("·çÁ£×ÓÉèÖÃ")]
+    [Header("ç”Ÿæˆç›¸å…³è®¾ç½®")]
     public GameObject windParticlePrefab;
-    public Transform windSpawnPlane; // Éú³É·çµÄÆ½Ãæ
-    public Vector2 spawnSize = new Vector2(5f, 3f); // Éú³ÉÇøÓò´óĞ¡
-    public Vector2 windSpeedRange = new Vector2(1f, 3f); // ·çËÙ·¶Î§
-    public Vector2 spawnIntervalRange = new Vector2(0.5f, 2f); // Éú³É¼ä¸ô·¶Î§
+    public Transform windSpawnPlane; // ç”Ÿæˆé£çš„å¹³é¢
+    public Vector2 spawnSize = new Vector2(5f, 3f); // ç²’å­ç”ŸæˆåŒºåŸŸå¤§å°
+    public Vector2 windSpeedRange = new Vector2(1f, 3f); // é£é€ŸèŒƒå›´
+    public Vector2 spawnIntervalRange = new Vector2(0.5f, 2f); // ç”Ÿæˆé—´éš”èŒƒå›´
 
-    [Header("Íæ¼ÒÉèÖÃ")]
+    [Header("æ•æ‰ç›¸å…³è®¾ç½®")]
     public Transform leftHand;
     public Transform rightHand;
-    public float catchRadius = 0.3f; // ²¶×½°ë¾¶
+    public float catchRadius = 0.3f; // æ•æ‰åŠå¾„
 
-    [Header("Ğ§¹ûÉèÖÃ")]
+    [Header("ç‰¹æ•ˆç›¸å…³")]
     public ParticleSystem catchEffect;
 
-    [Header("FMODÉèÖÃ")]
-    [EventRef] public string catchSoundEvent; // FMODÊÂ¼şÂ·¾¶
+    [Header("FMODéŸ³æ•ˆ")]
+    [EventRef] public string catchSoundEvent; // FMODäº‹ä»¶è·¯å¾„
 
-    [Header("ÓÎÏ·ÉèÖÃ")]
-    public int maxCatches = 10; // ×î´ó²¶×½´ÎÊı
-    private int currentCatches = 0; // µ±Ç°²¶×½´ÎÊı
-    private bool gameActive = true; // ÓÎÏ·ÊÇ·ñ½øĞĞÖĞ
+    [Header("æ¸¸æˆè¿›åº¦")]
+    public int maxCatches = 10; // æœ€å¤§æ•æ‰æ•°
+    private int currentCatches = 0; // å½“å‰æ•æ‰æ•°
+    private bool gameActive = true; // æ¸¸æˆæ˜¯å¦è¿›è¡Œä¸­
+
+    [Header("æ¸¸æˆè¿›åº¦")]
+    public GameObject unlockableItem; // æƒ³è¦å¯ç”¨çš„ç‰©ä½“
+    public int unlockAtCatchCount = 6; // è¾¾åˆ°å‡ æ¬¡æŠ“å–åå¯ç”¨
+    private bool itemUnlocked = false; // åªå¯ç”¨ä¸€æ¬¡
+
+    [Header("ç¬¬äºŒé˜¶æ®µè§£é”ç‰©ä½“")]
+    public GameObject secondUnlockableItem;
+    public int secondUnlockAtCatchCount = 8;
+    public Vector3 secondUnlockTargetScale = Vector3.one;
+    public float scaleDuration = 1f;
+    private bool secondItemUnlocked = false;
+
+
 
     private float nextSpawnTime;
+    private int totalSpawned = 0; // å·²ç”Ÿæˆçš„é£ç²’å­æ€»æ•°
 
     void Start()
     {
@@ -38,20 +54,34 @@ public class WindChimeGame : MonoBehaviour
     {
         if (!gameActive) return;
 
-        // Éú³ÉĞÂµÄ·çÁ£×Ó
+        // æ§åˆ¶é£ç²’å­ç”Ÿæˆé€»è¾‘
         if (Time.time >= nextSpawnTime)
         {
-            SpawnWindParticle();
-            nextSpawnTime = Time.time + Random.Range(spawnIntervalRange.x, spawnIntervalRange.y);
+            if (totalSpawned < 6)
+            {
+                // å‰6ä¸ªï¼šå•ä¸ªç”Ÿæˆ
+                SpawnWindParticle();
+                totalSpawned++;
+                nextSpawnTime = Time.time + Random.Range(spawnIntervalRange.x, spawnIntervalRange.y);
+            }
+            else
+            {
+                // ç¬¬7ä¸ªåŠä¹‹åï¼šæˆå¯¹ç”Ÿæˆï¼Œé—´éš”ç¼©çŸ­
+                SpawnWindParticle();
+                SpawnWindParticle();
+                totalSpawned += 2;
+                float shorterInterval = Random.Range(spawnIntervalRange.x, spawnIntervalRange.y) * 0.5f; // æ—¶é—´å‡åŠ
+                nextSpawnTime = Time.time + shorterInterval;
+            }
         }
 
-        // ¼ì²â²¶×½
+        // æ£€æµ‹æ˜¯å¦æœ‰ç²’å­è¢«æŠ“ä½
         DetectCatches();
     }
 
     void SpawnWindParticle()
     {
-        // ÔÚÉú³ÉÆ½ÃæÉÏËæ»úÎ»ÖÃ
+        // ç”Ÿæˆä½ç½®åœ¨ç”Ÿæˆå¹³é¢ä¸Šçš„ä¸€ä¸ªéšæœºç‚¹
         Vector3 spawnPos = windSpawnPlane.position +
                           windSpawnPlane.right * Random.Range(-spawnSize.x / 2, spawnSize.x / 2) +
                           windSpawnPlane.up * Random.Range(-spawnSize.y / 2, spawnSize.y / 2);
@@ -59,29 +89,25 @@ public class WindChimeGame : MonoBehaviour
         GameObject wind = Instantiate(windParticlePrefab, spawnPos, Quaternion.identity);
         WindParticle wp = wind.AddComponent<WindParticle>();
 
-        // ÉèÖÃ·çËÙºÍ·½Ïò(³¯ÏòÍæ¼Ò)
         wp.speed = Random.Range(windSpeedRange.x, windSpeedRange.y);
         wp.direction = -windSpawnPlane.forward;
 
-        // ×Ô¶¯Ïú»Ù
+        // è‡ªåŠ¨é”€æ¯
         Destroy(wind, 10f);
     }
 
     void DetectCatches()
     {
-        // »ñÈ¡³¡¾°ÖĞËùÓĞ·çÁ£×Ó
         WindParticle[] winds = FindObjectsOfType<WindParticle>();
 
         foreach (WindParticle wind in winds)
         {
-            // ¼ì²â×óÊÖ
             if (Vector3.Distance(leftHand.position, wind.transform.position) < catchRadius)
             {
                 CatchWind(wind.gameObject, leftHand.position);
                 break;
             }
 
-            // ¼ì²âÓÒÊÖ
             if (Vector3.Distance(rightHand.position, wind.transform.position) < catchRadius)
             {
                 CatchWind(wind.gameObject, rightHand.position);
@@ -90,37 +116,75 @@ public class WindChimeGame : MonoBehaviour
         }
     }
 
-    void CatchWind(GameObject wind, Vector3 catchPosition)
+void CatchWind(GameObject wind, Vector3 catchPosition)
+{
+    // æ’­æ”¾FMODéŸ³æ•ˆ
+    if (!string.IsNullOrEmpty(catchSoundEvent))
     {
-        // ²¥·ÅFMODÒôĞ§
-        if (!string.IsNullOrEmpty(catchSoundEvent))
-        {
-            RuntimeManager.PlayOneShot(catchSoundEvent, catchPosition);
-        }
-
-        // ²¥·ÅÁ£×ÓĞ§¹û
-        if (catchEffect != null)
-        {
-            ParticleSystem effect = Instantiate(catchEffect, catchPosition, Quaternion.identity);
-            Destroy(effect.gameObject, 2f);
-        }
-
-        // Ôö¼Ó²¶×½¼ÆÊı
-        currentCatches++;
-
-        // ¼ì²éÊÇ·ñ´ïµ½×î´ó²¶×½´ÎÊı
-        if (currentCatches >= maxCatches)
-        {
-            gameActive = false;
-            Debug.Log("ÓÎÏ·½áÊø£¡ÒÑ´ïµ½×î´ó²¶×½´ÎÊı");
-        }
-
-        // Ïú»Ù·çÁ£×Ó
-        Destroy(wind);
+        RuntimeManager.PlayOneShot(catchSoundEvent, catchPosition);
     }
+
+    // ç”ŸæˆæŠ“å–ç‰¹æ•ˆ
+    if (catchEffect != null)
+    {
+        ParticleSystem effect = Instantiate(catchEffect, catchPosition, Quaternion.identity);
+        Destroy(effect.gameObject, 2f);
+    }
+
+    currentCatches++;
+
+    // æ£€æŸ¥æ˜¯å¦éœ€è¦å¯ç”¨ç‰©å“
+    if (!itemUnlocked && currentCatches >= unlockAtCatchCount)
+    {
+        if (unlockableItem != null)
+        {
+            unlockableItem.SetActive(true); // å¯ç”¨
+            Debug.Log("ç‰©å“å·²å¯ç”¨ï¼");
+        }
+        itemUnlocked = true;
+    }
+
+    // æ£€æŸ¥æ˜¯å¦è¾¾åˆ°æœ€å¤§æŠ“å–æ¬¡æ•°ï¼Œç»“æŸæ¸¸æˆ
+    if (currentCatches >= maxCatches)
+    {
+        gameActive = false;
+        Debug.Log("æ¸¸æˆç»“æŸï¼Œå·²è¾¾åˆ°æœ€å¤§æŠ“å–æ•°ã€‚");
+    }
+
+    // åˆ é™¤è¢«æŠ“åˆ°çš„é£
+    Destroy(wind);
+
+    // æ£€æŸ¥æ˜¯å¦éœ€è¦å¯ç”¨ç¬¬äºŒä¸ªç‰©å“
+if (!secondItemUnlocked && currentCatches >= secondUnlockAtCatchCount)
+{
+    if (secondUnlockableItem != null)
+    {
+        secondUnlockableItem.SetActive(true);
+        StartCoroutine(ScaleUpObject(secondUnlockableItem, secondUnlockTargetScale, scaleDuration));
+        Debug.Log("ç¬¬äºŒä¸ªç‰©å“å·²å¯ç”¨å¹¶å¼€å§‹ç¼©æ”¾ï¼");
+    }
+    secondItemUnlocked = true;
+}
+}
+IEnumerator ScaleUpObject(GameObject obj, Vector3 targetScale, float duration)
+{
+    Transform t = obj.transform;
+    Vector3 initialScale = Vector3.zero;
+    float time = 0f;
+
+    t.localScale = initialScale;
+
+    while (time < duration)
+    {
+        t.localScale = Vector3.Lerp(initialScale, targetScale, time / duration);
+        time += Time.deltaTime;
+        yield return null;
+    }
+
+    t.localScale = targetScale; // ä¿è¯æœ€ç»ˆä¸ºç›®æ ‡å¤§å°
 }
 
-// ·çÁ£×ÓĞĞÎª½Å±¾
+}
 public class WindParticle : MonoBehaviour
 {
     public float speed;
@@ -128,7 +192,6 @@ public class WindParticle : MonoBehaviour
 
     void Update()
     {
-        // ÑØÖ¸¶¨·½ÏòÒÆ¶¯
         transform.position += direction.normalized * speed * Time.deltaTime;
     }
 }

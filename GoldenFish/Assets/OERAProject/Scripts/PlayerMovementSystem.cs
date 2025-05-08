@@ -52,6 +52,14 @@ public class PlayerMovementSystem : MonoBehaviour
     public Animator targetAnimator;
     public string bloomParameterName = "bloom";
 
+    [Header("渐变出现的物体")]
+    public GameObject scaleUpObject;              // 要启用并放大的物体
+    public Vector3 targetScale = Vector3.one;     // 最终缩放大小
+    public float scaleUpDuration = 0.5f;          // 缩放持续时间
+    public float scaleUpDelay = 1f; // 启用前的延迟时间（秒）
+
+
+
     private float lastMoveTime = -Mathf.Infinity;
 
     void Start()
@@ -190,6 +198,12 @@ IEnumerator MovePlayer(Vector3 direction)
                 Debug.Log($"已设置Animator参数 {bloomParameterName} = true");
             }
             else Debug.LogWarning("未分配目标Animator，无法设置bloom参数");
+            if (scaleUpObject != null)
+            {
+                scaleUpObject.SetActive(true);
+                StartCoroutine(ScaleUpObject(scaleUpObject, targetScale, scaleUpDuration, scaleUpDelay));
+            }
+
 
             RuntimeManager.PlayOneShot(blossom);
             hasDisabledFeatures = true;
@@ -232,4 +246,28 @@ IEnumerator MovePlayer(Vector3 direction)
         Gizmos.DrawWireSphere(triggerPos, triggerRadius);
         Gizmos.DrawLine(triggerPos, triggerPos + CalculateMoveDirection() * moveDistance * 0.5f);
     }
+
+IEnumerator ScaleUpObject(GameObject obj, Vector3 finalScale, float duration, float delay)
+{
+
+
+    obj.SetActive(true);
+    Transform objTransform = obj.transform;
+    Vector3 initialScale = Vector3.zero;
+    float elapsed = 0f;
+
+    objTransform.localScale = initialScale;
+    yield return new WaitForSeconds(delay);
+    while (elapsed < duration)
+    {
+        float t = elapsed / duration;
+        objTransform.localScale = Vector3.Lerp(initialScale, finalScale, t);
+        elapsed += Time.deltaTime;
+        yield return null;
+    }
+
+    objTransform.localScale = finalScale;
+}
+
+
 }
