@@ -263,7 +263,7 @@ MonoBehaviour:
   - {fileID: 1195961228258963981}
   StringsBanks:
   - {fileID: 2544542042129722645}
-  stringsBankWriteTime: 638823243356028101
+  stringsBankWriteTime: 638823384756134726
   cacheVersion: 6
 --- !u!114 &103041133822799987
 MonoBehaviour:
@@ -303,7 +303,7 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638823243356023043
+  lastModified: 638823384784481730
   LoadResult: 0
   FileSizes: []
   Exists: 1
@@ -322,12 +322,31 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638823243356028101
+  lastModified: 638823384756134726
   LoadResult: 0
   FileSizes:
   - Name: 
     Value: 1310
   Exists: 1
+--- !u!114 &3355208409365681836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master 1.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/Desktop/Master 1.bank
+  Name: Master 1
+  StudioPath: bank:/Master 1
+  lastModified: 638823384784481730
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
 --- !u!114 &3942513861357567958
 MonoBehaviour:
   m_ObjectHideFlags: 0

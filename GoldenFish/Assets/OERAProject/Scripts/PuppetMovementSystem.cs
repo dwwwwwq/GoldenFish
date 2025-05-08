@@ -6,48 +6,60 @@ using FMODUnity;
 
 public class FixedZonePuppetMovement : MonoBehaviour
 {
-    [Header("VRÅäÖÃ")]
+    [Header("VRï¿½ï¿½ï¿½ï¿½")]
     public XROrigin xrOrigin;
     public Transform leftHand;
     public Transform rightHand;
     public Transform head;
 
-    [Header("ÒÆ¶¯²ÎÊı")]
+    [Header("ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public float stepDistance = 0.5f;
     public float stepDuration = 0.8f;
     public float cooldown = 0.5f;
 
-    [Header("×óÊÖ´¥·¢ÇøÓòÉèÖÃ")]
-    public Vector3 leftForwardOffset = new Vector3(0.3f, 0.2f, 0.5f);  // ×óÇ°·½Î»ÖÃ
-    public Vector3 leftBackwardOffset = new Vector3(0.3f, 0.2f, -0.5f); // ×óºó·½Î»ÖÃ
+    [Header("ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    public Vector3 leftForwardOffset = new Vector3(0.3f, 0.2f, 0.5f);  // ï¿½ï¿½Ç°ï¿½ï¿½Î»ï¿½ï¿½
+    public Vector3 leftBackwardOffset = new Vector3(0.3f, 0.2f, -0.5f); // ï¿½ï¿½ï¿½Î»ï¿½ï¿½
     public float leftZoneRadius = 0.3f;
     public Color leftReadyColor = Color.cyan;
     public Color leftWaitingColor = Color.gray;
 
-    [Header("ÓÒÊÖ´¥·¢ÇøÓòÉèÖÃ")]
-    public Vector3 rightForwardOffset = new Vector3(-0.3f, -0.2f, 0.5f);  // ÓÒÇ°·½Î»ÖÃ
-    public Vector3 rightBackwardOffset = new Vector3(-0.3f, -0.2f, -0.5f); // ÓÒºó·½Î»ÖÃ
+    [Header("ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    public Vector3 rightForwardOffset = new Vector3(-0.3f, -0.2f, 0.5f);  // ï¿½ï¿½Ç°ï¿½ï¿½Î»ï¿½ï¿½
+    public Vector3 rightBackwardOffset = new Vector3(-0.3f, -0.2f, -0.5f); // ï¿½Òºï¿½Î»ï¿½ï¿½
     public float rightZoneRadius = 0.3f;
     public Color rightReadyColor = Color.magenta;
     public Color rightWaitingColor = Color.gray;
 
-    [Header("²½ĞĞ¶¯»­²ÎÊı")]
-    public float upwardDistance = 0.1f; // ÏòÉÏÒÆ¶¯µÄ¾àÀë
-    public float upwardDurationRatio = 0.3f; // ÏòÉÏÒÆ¶¯ËùÕ¼µÄÊ±¼ä±ÈÀı
-    public float downwardDurationRatio = 0.7f; // ÏòÏÂÒÆ¶¯ËùÕ¼µÄÊ±¼ä±ÈÀı
+    [Header("ï¿½ï¿½ï¿½Ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    public float upwardDistance = 0.1f; // ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ä¾ï¿½ï¿½ï¿½
+    public float upwardDurationRatio = 0.3f; // ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float downwardDurationRatio = 0.7f; // ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
-    [Header("µ÷ÊÔ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
     public bool showZones = true;
 
     private GameObject leftZone;
     private GameObject rightZone;
     private bool isMoving;
     private float lastStepTime;
-    private bool isForwardPosition = true; // µ±Ç°ÊÇ·ñÊÇÇ°·½Î»ÖÃ
+    private bool isForwardPosition = true; // ï¿½ï¿½Ç°ï¿½Ç·ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Î»ï¿½ï¿½
 
-    [Header("FMODÉèÖÃ")]
+    [Header("FMODï¿½ï¿½ï¿½ï¿½")]
     [EventRef] public string footstep;
+
+    [Header("åˆ¤å®šåŒºåŸŸé¢„åˆ¶ä½“")]
+    public GameObject leftZonePrefab;
+    public GameObject rightZonePrefab;
+
+    [Header("æ­¥éª¤è§¦å‘")]
+    public GameObject targetObject; // è¦å¯ç”¨çš„ç‰©ä½“
+    public int triggerStepIndex = 6; // ç¬¬å‡ æ­¥æ—¶è§¦å‘ï¼ˆä»1å¼€å§‹ï¼‰
+
+    private int stepCount = 0; // å½“å‰å·²èµ°çš„æ­¥æ•°
+
+
 
     void Start()
     {
@@ -55,20 +67,38 @@ public class FixedZonePuppetMovement : MonoBehaviour
         UpdateZonePositions();
     }
 
-    void CreateZones()
+void CreateZones()
+{
+    if (leftZonePrefab != null)
     {
-        leftZone = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        Destroy(leftZone.GetComponent<Collider>());
-        leftZone.transform.localScale = Vector3.one * leftZoneRadius * 2;
-        leftZone.GetComponent<Renderer>().material = new Material(Shader.Find("Standard"));
-        leftZone.GetComponent<Renderer>().material.color = leftWaitingColor;
-
-        rightZone = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        Destroy(rightZone.GetComponent<Collider>());
-        rightZone.transform.localScale = Vector3.one * rightZoneRadius * 2;
-        rightZone.GetComponent<Renderer>().material = new Material(Shader.Find("Standard"));
-        rightZone.GetComponent<Renderer>().material.color = rightWaitingColor;
+        leftZone = Instantiate(leftZonePrefab);
     }
+    else
+    {
+        Debug.LogWarning("æœªæŒ‡å®šå·¦æ‰‹åˆ¤å®šåŒºåŸŸé¢„åˆ¶ä½“ï¼");
+    }
+
+    if (rightZonePrefab != null)
+    {
+        rightZone = Instantiate(rightZonePrefab);
+    }
+    else
+    {
+        Debug.LogWarning("æœªæŒ‡å®šå³æ‰‹åˆ¤å®šåŒºåŸŸé¢„åˆ¶ä½“ï¼");
+    }
+
+    // è®¾ç½®åˆå§‹ç¼©æ”¾
+    if (leftZone != null)
+    {
+        leftZone.transform.localScale = Vector3.one * leftZoneRadius * 2;
+    }
+
+    if (rightZone != null)
+    {
+        rightZone.transform.localScale = Vector3.one * rightZoneRadius * 2;
+    }
+}
+
 
     void Update()
     {
@@ -91,7 +121,7 @@ public class FixedZonePuppetMovement : MonoBehaviour
 
     void UpdateZonePositions()
     {
-        // ¸ù¾İµ±Ç°ÊÇÇ°·½»¹ÊÇºó·½Î»ÖÃÀ´ÉèÖÃÇøÓò
+        // ï¿½ï¿½ï¿½İµï¿½Ç°ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Çºï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Vector3 currentLeftOffset = isForwardPosition ? leftForwardOffset : leftBackwardOffset;
         Vector3 currentRightOffset = isForwardPosition ? rightForwardOffset : rightBackwardOffset;
 
@@ -110,12 +140,12 @@ public class FixedZonePuppetMovement : MonoBehaviour
         moveDir.y = 0;
         Vector3 horizontalTarget = startPos + moveDir.normalized * stepDistance;
 
-        // ¼ÆËãÉÏÏÂÒÆ¶¯µÄ·ù¶È
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ä·ï¿½ï¿½ï¿½
         float totalHeightChange = upwardDistance;
         float upwardDuration = stepDuration * upwardDurationRatio;
         float downwardDuration = stepDuration * downwardDurationRatio;
 
-        // µÚÒ»½×¶Î£ºÏòÉÏÒÆ¶¯
+        // ï¿½ï¿½Ò»ï¿½×¶Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½
         float elapsed = 0f;
         Vector3 upwardTarget = startPos + moveDir.normalized * (stepDistance * upwardDurationRatio)
                               + Vector3.up * totalHeightChange;
@@ -130,7 +160,7 @@ public class FixedZonePuppetMovement : MonoBehaviour
             yield return null;
         }
 
-        // µÚ¶ş½×¶Î£ºÏòÏÂÒÆ¶¯»Øµ½Ë®Æ½Î»ÖÃ
+        // ï¿½Ú¶ï¿½ï¿½×¶Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Øµï¿½Ë®Æ½Î»ï¿½ï¿½
         elapsed = 0f;
         Vector3 finalTarget = new Vector3(horizontalTarget.x, startPos.y, horizontalTarget.z);
 
@@ -146,10 +176,18 @@ public class FixedZonePuppetMovement : MonoBehaviour
 
         xrOrigin.transform.position = finalTarget;
 
-        // ÇĞ»»Ç°ºóÎ»ÖÃ
+        // ï¿½Ğ»ï¿½Ç°ï¿½ï¿½Î»ï¿½ï¿½
         isForwardPosition = !isForwardPosition;
 
-        // ÖØÖÃÇøÓòÑÕÉ«
+        stepCount++;
+
+    if (stepCount == triggerStepIndex && targetObject != null)
+    {
+        targetObject.SetActive(true);
+    }
+
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
         leftZone.GetComponent<Renderer>().material.color = leftWaitingColor;
         rightZone.GetComponent<Renderer>().material.color = rightWaitingColor;
 
@@ -166,17 +204,17 @@ public class FixedZonePuppetMovement : MonoBehaviour
     {
         if (!showZones || head == null) return;
 
-        // »æÖÆÇ°·½ÇøÓò
+        // ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(head.position + leftForwardOffset, leftZoneRadius);
         Gizmos.DrawWireSphere(head.position + rightForwardOffset, rightZoneRadius);
 
-        // »æÖÆºó·½ÇøÓò
+        // ï¿½ï¿½ï¿½Æºï¿½ï¿½ï¿½ï¿½ï¿½
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(head.position + leftBackwardOffset, leftZoneRadius);
         Gizmos.DrawWireSphere(head.position + rightBackwardOffset, rightZoneRadius);
 
-        // »æÖÆµ±Ç°»î¶¯ÇøÓò
+        // ï¿½ï¿½ï¿½Æµï¿½Ç°ï¿½î¶¯ï¿½ï¿½ï¿½ï¿½
         Gizmos.color = Color.green;
         Vector3 currentLeft = isForwardPosition ? leftForwardOffset : leftBackwardOffset;
         Vector3 currentRight = isForwardPosition ? rightForwardOffset : rightBackwardOffset;
