@@ -1,77 +1,106 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SinkInWater : MonoBehaviour
 {
-    public GameObject prefab; // 要生成的预制体
-    public GameObject referenceObject; // 用来规定生成范围的物体
-    public GameObject character; // 角色 GameObject，用来获取角色高度
-    public float sinkSpeed = 2f; // 沉入水中的速度
-    public float waterLevel = 0f; // 水面高度（可扩展）
-    public int numberOfObjects = 10; // 生成物体的数量
-    public float spawnInterval = 1f; // 正常生成间隔时间（秒）
-    public float shortInterval = 0.3f; // 节奏变化时使用的较短间隔
+    public GameObject prefab;
+    public GameObject referenceObject;
+    public GameObject character;
+    public float sinkSpeed = 2f;
+    public int numberOfObjects = 10;
+    public float spawnInterval = 1f;
+    public float shortInterval = 0.3f;
+    public int sequentialDropCount = 3; // 前几颗采用逐个吃掉后生成
+    public float waitAfterEat = 1.5f; // 吃掉一个后等待再生成下一个
 
-    private float groundHeight; // 物体下落的最低点，角色的 Y 坐标
+
+    private float groundHeight;
+    private Queue<GameObject> activeObjects = new Queue<GameObject>();
+    private int currentSpawnIndex = 0;
+    private Collider referenceCollider;
 
     private void Start()
     {
-        // 获取 referenceObject 的碰撞箱
-        Collider referenceCollider = referenceObject.GetComponent<Collider>();
-
+        referenceCollider = referenceObject.GetComponent<Collider>();
         if (referenceCollider == null)
         {
             Debug.LogError("Reference object does not have a collider.");
             return;
         }
 
-        // 获取角色的 Y 坐标（作为地面高度）
         groundHeight = character.transform.position.y;
-
-        // 启动协程按节奏生成物体
-        StartCoroutine(SpawnObjectsWithInterval(referenceCollider));
+        StartCoroutine(SpawnSequentially());
     }
 
-    private IEnumerator SpawnObjectsWithInterval(Collider referenceCollider)
+private IEnumerator SpawnSequentially()
+{
+    while (currentSpawnIndex < sequentialDropCount)
     {
-        // 获取碰撞箱的范围
-        Vector3 boundsMin = referenceCollider.bounds.min;
-        Vector3 boundsMax = referenceCollider.bounds.max;
+        SpawnObject(currentSpawnIndex);
+        currentSpawnIndex++;
 
-        for (int i = 0; i < numberOfObjects; i++)
+        // 等待该对象被吃掉（队列清空）
+        yield return new WaitUntil(() => activeObjects.Count == 0);
+
+        // 吃掉后再等一小段时间
+        yield return new WaitForSeconds(waitAfterEat);
+    }
+
+    // 吃完前三个后，进入后续常规生成
+    StartCoroutine(SpawnRemaining());
+}
+
+
+    private IEnumerator SpawnRemaining()
+    {
+        for (int i = currentSpawnIndex; i < numberOfObjects; i++)
         {
-            // 随机生成位置，确保在碰撞箱的范围内
-            float x = Random.Range(boundsMin.x, boundsMax.x);
-            float z = Random.Range(boundsMin.z, boundsMax.z);
-            float y = boundsMax.y; // 生成位置的 y 坐标位于碰撞箱的顶部
+            SpawnObject(i);
 
-            Vector3 spawnPosition = new Vector3(x, y, z);
-
-            GameObject spawnedObject = Instantiate(prefab, spawnPosition, Quaternion.identity);
-            StartCoroutine(SinkObject(spawnedObject)); // 启动物体沉入水中的协程
-
-            // 节奏变化：第4个（i=3）和第7个（i=6）后用短间隔
             if (i == 3 || i == 6)
-            {
                 yield return new WaitForSeconds(shortInterval);
-            }
             else
-            {
                 yield return new WaitForSeconds(spawnInterval);
-            }
         }
+    }
+
+    private void SpawnObject(int index)
+    {
+        Vector3 spawnPos = GetRandomSpawnPosition(referenceCollider);
+        GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity);
+        activeObjects.Enqueue(obj);
+        StartCoroutine(SinkObject(obj));
+    }
+
+    private Vector3 GetRandomSpawnPosition(Collider col)
+    {
+        Vector3 min = col.bounds.min;
+        Vector3 max = col.bounds.max;
+        float x = Random.Range(min.x, max.x);
+        float z = Random.Range(min.z, max.z);
+        float y = max.y;
+        return new Vector3(x, y, z);
     }
 
     private IEnumerator SinkObject(GameObject obj)
     {
-        // 沉入水中的过程
         while (obj.transform.position.y > groundHeight)
         {
             obj.transform.position += Vector3.down * sinkSpeed * Time.deltaTime;
             yield return null;
         }
 
-        // 到达地面高度后停止
         obj.transform.position = new Vector3(obj.transform.position.x, groundHeight, obj.transform.position.z);
+        // 不销毁，由 Eat 控制销毁
+    }
+
+    // 外部调用：当一个物体被吃掉（销毁）时触发
+    public void NotifyObjectEaten(GameObject obj)
+    {
+        if (activeObjects.Contains(obj))
+        {
+            activeObjects.Dequeue();
+        }
     }
 }
