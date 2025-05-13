@@ -8,9 +8,12 @@ public class WindChimeGame : MonoBehaviour
     [Header("生成相关设置")]
     public GameObject windParticlePrefab;
     public Transform windSpawnPlane; // 生成风的平面
-    public Vector2 spawnSize = new Vector2(5f, 3f); // 粒子生成区域大小
     public Vector2 windSpeedRange = new Vector2(1f, 3f); // 风速范围
     public Vector2 spawnIntervalRange = new Vector2(0.5f, 2f); // 生成间隔范围
+
+    [Header("双倍生成设置")]
+    public int doubleSpawnAtCatchCount = 3; // 接住多少个后开始双倍生成
+    private bool doubleSpawnActive = false; // 是否启用双倍生成
 
     [Header("捕捉相关设置")]
     public Transform leftHand;
@@ -40,13 +43,22 @@ public class WindChimeGame : MonoBehaviour
     public float scaleDuration = 1f;
     private bool secondItemUnlocked = false;
 
-
-
     private float nextSpawnTime;
-    private int totalSpawned = 0; // 已生成的风粒子总数
 
     void Start()
     {
+        // 确保生成平面有MeshRenderer组件以便可见
+        if (windSpawnPlane != null)
+        {
+            var renderer = windSpawnPlane.GetComponent<MeshRenderer>();
+            if (renderer == null)
+            {
+                renderer = windSpawnPlane.gameObject.AddComponent<MeshRenderer>();
+            }
+            renderer.material = new Material(Shader.Find("Standard"));
+            renderer.material.color = new Color(0, 1, 0, 0.3f); // 半透明绿色
+        }
+
         nextSpawnTime = Time.time + Random.Range(spawnIntervalRange.x, spawnIntervalRange.y);
     }
 
@@ -57,20 +69,18 @@ public class WindChimeGame : MonoBehaviour
         // 控制风粒子生成逻辑
         if (Time.time >= nextSpawnTime)
         {
-            if (totalSpawned < 6)
+            if (!doubleSpawnActive)
             {
-                // 前6个：单个生成
+                // 单粒子生成模式
                 SpawnWindParticle();
-                totalSpawned++;
                 nextSpawnTime = Time.time + Random.Range(spawnIntervalRange.x, spawnIntervalRange.y);
             }
             else
             {
-                // 第7个及之后：成对生成，间隔缩短
+                // 双粒子生成模式
                 SpawnWindParticle();
                 SpawnWindParticle();
-                totalSpawned += 2;
-                float shorterInterval = Random.Range(spawnIntervalRange.x, spawnIntervalRange.y) * 0.5f; // 时间减半
+                float shorterInterval = Random.Range(spawnIntervalRange.x, spawnIntervalRange.y) * 0.5f;
                 nextSpawnTime = Time.time + shorterInterval;
             }
         }
@@ -81,10 +91,21 @@ public class WindChimeGame : MonoBehaviour
 
     void SpawnWindParticle()
     {
+        if (windSpawnPlane == null)
+        {
+            Debug.LogError("Wind spawn plane not assigned!");
+            return;
+        }
+
+        // 获取平面的大小
+        Vector3 planeSize = windSpawnPlane.localScale;
+        float width = planeSize.x * 10f; // Unity的plane默认是10单位宽
+        float height = planeSize.z * 10f; // Unity的plane默认是10单位长
+
         // 生成位置在生成平面上的一个随机点
         Vector3 spawnPos = windSpawnPlane.position +
-                          windSpawnPlane.right * Random.Range(-spawnSize.x / 2, spawnSize.x / 2) +
-                          windSpawnPlane.up * Random.Range(-spawnSize.y / 2, spawnSize.y / 2);
+                          windSpawnPlane.right * Random.Range(-width / 2, width / 2) +
+                          windSpawnPlane.up * Random.Range(-height / 2, height / 2);
 
         GameObject wind = Instantiate(windParticlePrefab, spawnPos, Quaternion.identity);
         WindParticle wp = wind.AddComponent<WindParticle>();
@@ -116,75 +137,111 @@ public class WindChimeGame : MonoBehaviour
         }
     }
 
-void CatchWind(GameObject wind, Vector3 catchPosition)
-{
-    // 播放FMOD音效
-    if (!string.IsNullOrEmpty(catchSoundEvent))
+    void CatchWind(GameObject wind, Vector3 catchPosition)
     {
-        RuntimeManager.PlayOneShot(catchSoundEvent, catchPosition);
-    }
-
-    // 生成抓取特效
-    if (catchEffect != null)
-    {
-        ParticleSystem effect = Instantiate(catchEffect, catchPosition, Quaternion.identity);
-        Destroy(effect.gameObject, 2f);
-    }
-
-    currentCatches++;
-
-    // 检查是否需要启用物品
-    if (!itemUnlocked && currentCatches >= unlockAtCatchCount)
-    {
-        if (unlockableItem != null)
+        // 播放FMOD音效
+        if (!string.IsNullOrEmpty(catchSoundEvent))
         {
-            unlockableItem.SetActive(true); // 启用
-            Debug.Log("物品已启用！");
+            RuntimeManager.PlayOneShot(catchSoundEvent, catchPosition);
         }
-        itemUnlocked = true;
+
+        // 生成抓取特效
+        if (catchEffect != null)
+        {
+            ParticleSystem effect = Instantiate(catchEffect, catchPosition, Quaternion.identity);
+            Destroy(effect.gameObject, 2f);
+        }
+
+        currentCatches++;
+
+        // 检查是否激活双倍生成
+        if (!doubleSpawnActive && currentCatches >= doubleSpawnAtCatchCount)
+        {
+            doubleSpawnActive = true;
+            Debug.Log("双倍生成模式激活！");
+        }
+
+        // 检查是否需要启用物品
+        if (!itemUnlocked && currentCatches >= unlockAtCatchCount)
+        {
+            if (unlockableItem != null)
+            {
+                unlockableItem.SetActive(true);
+                Debug.Log("物品已启用！");
+            }
+            itemUnlocked = true;
+        }
+
+        // 检查是否达到最大抓取次数，结束游戏
+        if (currentCatches >= maxCatches)
+        {
+            gameActive = false;
+            Debug.Log("游戏结束，已达到最大抓取数。");
+        }
+
+        // 删除被抓到的风
+        Destroy(wind);
+
+        // 检查是否需要启用第二个物品
+        if (!secondItemUnlocked && currentCatches >= secondUnlockAtCatchCount)
+        {
+            if (secondUnlockableItem != null)
+            {
+                secondUnlockableItem.SetActive(true);
+                StartCoroutine(ScaleUpObject(secondUnlockableItem, secondUnlockTargetScale, scaleDuration));
+                Debug.Log("第二个物品已启用并开始缩放！");
+            }
+            secondItemUnlocked = true;
+        }
     }
 
-    // 检查是否达到最大抓取次数，结束游戏
-    if (currentCatches >= maxCatches)
+    IEnumerator ScaleUpObject(GameObject obj, Vector3 targetScale, float duration)
     {
-        gameActive = false;
-        Debug.Log("游戏结束，已达到最大抓取数。");
+        Transform t = obj.transform;
+        Vector3 initialScale = Vector3.zero;
+        float time = 0f;
+
+        t.localScale = initialScale;
+
+        while (time < duration)
+        {
+            t.localScale = Vector3.Lerp(initialScale, targetScale, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        t.localScale = targetScale; // 保证最终为目标大小
     }
 
-    // 删除被抓到的风
-    Destroy(wind);
-
-    // 检查是否需要启用第二个物品
-if (!secondItemUnlocked && currentCatches >= secondUnlockAtCatchCount)
-{
-    if (secondUnlockableItem != null)
+    void OnDrawGizmos()
     {
-        secondUnlockableItem.SetActive(true);
-        StartCoroutine(ScaleUpObject(secondUnlockableItem, secondUnlockTargetScale, scaleDuration));
-        Debug.Log("第二个物品已启用并开始缩放！");
+        if (windSpawnPlane != null)
+        {
+            Gizmos.color = Color.green;
+
+            // 获取平面的大小
+            Vector3 planeSize = windSpawnPlane.localScale;
+            float width = planeSize.x * 10f; // Unity的plane默认是10单位宽
+            float height = planeSize.z * 10f; // Unity的plane默认是10单位长
+
+            // 绘制平面边界
+            Vector3 center = windSpawnPlane.position;
+            Vector3 right = windSpawnPlane.right * width / 2;
+            Vector3 up = windSpawnPlane.up * height / 2;
+
+            Vector3 topRight = center + right + up;
+            Vector3 topLeft = center - right + up;
+            Vector3 bottomRight = center + right - up;
+            Vector3 bottomLeft = center - right - up;
+
+            Gizmos.DrawLine(topRight, topLeft);
+            Gizmos.DrawLine(topLeft, bottomLeft);
+            Gizmos.DrawLine(bottomLeft, bottomRight);
+            Gizmos.DrawLine(bottomRight, topRight);
+        }
     }
-    secondItemUnlocked = true;
-}
-}
-IEnumerator ScaleUpObject(GameObject obj, Vector3 targetScale, float duration)
-{
-    Transform t = obj.transform;
-    Vector3 initialScale = Vector3.zero;
-    float time = 0f;
-
-    t.localScale = initialScale;
-
-    while (time < duration)
-    {
-        t.localScale = Vector3.Lerp(initialScale, targetScale, time / duration);
-        time += Time.deltaTime;
-        yield return null;
-    }
-
-    t.localScale = targetScale; // 保证最终为目标大小
 }
 
-}
 public class WindParticle : MonoBehaviour
 {
     public float speed;
