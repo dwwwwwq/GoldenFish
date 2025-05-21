@@ -1,5 +1,28 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7006105432042277788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SoundFX/Chime/FX_Conch
+  m_EditorClassIdentifier: 
+  Path: event:/SoundFX/Chime/FX_Conch
+  guid: 6d6c85b23f70e14881ad687de85a3c34
+  Banks:
+  - {fileID: 1195961228258963981}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &-6986124301792664499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,12 +281,13 @@ MonoBehaviour:
   - {fileID: -3510361575040016066}
   - {fileID: -4765197386920199856}
   - {fileID: -839831026859557199}
+  - {fileID: -7006105432042277788}
   EditorParameters: []
   MasterBanks:
   - {fileID: 1195961228258963981}
   StringsBanks:
   - {fileID: 2544542042129722645}
-  stringsBankWriteTime: 638823384756134726
+  stringsBankWriteTime: 638827691891483993
   cacheVersion: 6
 --- !u!114 &103041133822799987
 MonoBehaviour:
@@ -303,7 +327,7 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638823384784481730
+  lastModified: 638827691891463811
   LoadResult: 0
   FileSizes: []
   Exists: 1
@@ -322,11 +346,11 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638823384756134726
+  lastModified: 638827691891483993
   LoadResult: 0
   FileSizes:
   - Name: 
-    Value: 1310
+    Value: 1358
   Exists: 1
 --- !u!114 &3355208409365681836
 MonoBehaviour:
