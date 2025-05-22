@@ -288,6 +288,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: 2544542042129722645}
   stringsBankWriteTime: 638834652519338357
+
   cacheVersion: 6
 --- !u!114 &103041133822799987
 MonoBehaviour:
@@ -327,7 +328,9 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
+
   lastModified: 638834652519328391
+
   LoadResult: 0
   FileSizes: []
   Exists: 1
@@ -346,7 +349,9 @@ MonoBehaviour:
   Path: Assets/Audio/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
+
   lastModified: 638834652519338357
+
   LoadResult: 0
   FileSizes:
   - Name: 

@@ -17,6 +17,34 @@ MonoBehaviour:
   injectionPoint: 600
   requirements: 4
   passIndex: 0
+--- !u!114 &-6472332630263811901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dea88b8bfbd93941b433ee338a4192d, type: 3}
+  m_Name: RetroBlit
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    Event: 500
+    blitMaterial: {fileID: 2100000, guid: ba8de608517b2124ca15fc343ef0dc90, type: 2}
+    blitMaterialPassIndex: 0
+    setInverseViewMatrix: 0
+    requireDepthNormals: 0
+    srcType: 0
+    srcTextureId: _CameraColorTexture
+    srcTextureObject: {fileID: 0}
+    dstType: 0
+    dstTextureId: _BlitPassTexture
+    dstTextureObject: {fileID: 0}
+    overrideGraphicsFormat: 0
+    graphicsFormat: 8
+    canShowInSceneView: 1
 --- !u!114 &-6289514629416930625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +167,8 @@ MonoBehaviour:
   - {fileID: 5006046359170359954}
   - {fileID: -5918506149738454166}
   - {fileID: 5474575605292715313}
-  m_RendererFeatureMap: adc0de57c6d2eee5bf32fb8fc427b7a8d70f25064c6f88a192a27cf7a30c79456ae3dfaf033eddad31cd7de98199f94b
+  - {fileID: -6472332630263811901}
+  m_RendererFeatureMap: adc0de57c6d2eee5bf32fb8fc427b7a8d70f25064c6f88a192a27cf7a30c79456ae3dfaf033eddad31cd7de98199f94bc3b0f4c0c3a72da6
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
