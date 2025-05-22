@@ -446,6 +446,7 @@ PrefabInstance:
     - {fileID: 436242775870873064, guid: 6a1459f37f665934cba843f879d1b013, type: 3}
     - {fileID: 5663872527638802759, guid: 6a1459f37f665934cba843f879d1b013, type: 3}
     - {fileID: 4884793581173980275, guid: 6a1459f37f665934cba843f879d1b013, type: 3}
+    - {fileID: 5727917182313761944, guid: 6a1459f37f665934cba843f879d1b013, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -2997,7 +2998,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 784000097}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
@@ -5031,7 +5032,7 @@ PrefabInstance:
     - target: {fileID: 7815503236674395578, guid: 6ca7fcb242afb454197f58b1784df082,
         type: 3}
       propertyPath: featuresToEnable.Array.data[0]
-      value: inDark
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7815503236674395578, guid: 6ca7fcb242afb454197f58b1784df082,
         type: 3}
@@ -7038,6 +7039,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Window_Bedroom_2x3M (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1030976146, guid: abc00000000000686321760856481077, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1030976147, guid: abc00000000000686321760856481077, type: 3}
       propertyPath: m_LocalScale.x
       value: 10.1769285
@@ -7526,7 +7531,7 @@ PrefabInstance:
     - target: {fileID: 3914072731116386668, guid: 521082867cb6b4d47aedfb969d4fa8d9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.92
+      value: 10.17
       objectReference: {fileID: 0}
     - target: {fileID: 3914072731116386668, guid: 521082867cb6b4d47aedfb969d4fa8d9,
         type: 3}
@@ -7632,6 +7637,11 @@ PrefabInstance:
         type: 3}
       propertyPath: windSpeedRange.y
       value: 4.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8501350298520726508, guid: 521082867cb6b4d47aedfb969d4fa8d9,
+        type: 3}
+      propertyPath: unlockAtCatchCount
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8501350298520726508, guid: 521082867cb6b4d47aedfb969d4fa8d9,
         type: 3}
@@ -9276,7 +9286,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2140805092}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43ee99b80f5356b4282dd5a0089f5df7, type: 3}
   m_Name: 

@@ -11,9 +11,24 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Samples/XR Interaction Toolkit/2.5.4/Starter Assets/DemoScene.unity
     guid: 319dafa5c80f29f428dc1e0d03f04177
-  - enabled: 1
+  - enabled: 0
     path: Assets/GameScene/Scene1.0.unity
     guid: 5bfb190d8cea3154a961cb9a2dfe1d69
+  - enabled: 1
+    path: Assets/GameScene/Scene1.unity
+    guid: fde52a89f2f2def4996aabaed54785d5
+  - enabled: 1
+    path: Assets/GameScene/Scene2.unity
+    guid: e9e5cba819b81ea4e9d847a84743a22b
+  - enabled: 1
+    path: Assets/GameScene/Scene3.unity
+    guid: 2d96f3d6d4245f243aff79b0c1452f67
+  - enabled: 1
+    path: Assets/GameScene/Scene4.unity
+    guid: 5119be0f6a77e064181ace726a1a82fb
+  - enabled: 1
+    path: Assets/GameScene/Scene5.unity
+    guid: 464bb51a11bf9b7419a74f834692ecbe
   m_configObjects:
     Unity.XR.PICO.LivePreview.Settings: {fileID: 11400000, guid: a497846a7f637444dbfcca5e575e3cd9,
       type: 2}

@@ -16,6 +16,9 @@ public class PlayerMovementSystem : MonoBehaviour
     public Transform head;
     public Camera vrCamera;
     
+[Header("移动启动延迟")]
+public float startDelay = 3f;
+private float startTime;
 
 
 
@@ -66,43 +69,51 @@ public class PlayerMovementSystem : MonoBehaviour
 
     private float lastMoveTime = -Mathf.Infinity;
 
-    void Start()
+void Start()
+{
+    if (resetOnNewSession) currentMoveCount = 0;
+    startTime = Time.time;
+}
+
+
+void Update()
+{
+    // 延迟未到，不进行任何移动判定
+    if (Time.time - startTime < startDelay)
+        return;
+
+    if (maxMoveCount > 0 && currentMoveCount >= maxMoveCount) return;
+
+    // 其余逻辑保持不变
+    Vector3 headPos = head.position;
+    Vector3 headForward = GetHorizontalForward(head);
+
+    bool leftHandIn = IsHandInDoubleSphere(leftHandCollider.transform.position, headPos, headForward);
+    bool rightHandIn = IsHandInDoubleSphere(rightHandCollider.transform.position, headPos, headForward);
+    bool handsInTrigger = leftHandIn && rightHandIn;
+
+    if (!isMoving && Time.time - lastMoveTime >= moveDuration)
     {
-        if (resetOnNewSession) currentMoveCount = 0;
-    }
-
-    void Update()
-    {
-        if (maxMoveCount > 0 && currentMoveCount >= maxMoveCount) return;
-
-        Vector3 headPos = head.position;
-        Vector3 headForward = GetHorizontalForward(head);
-
-        bool leftHandIn = IsHandInDoubleSphere(leftHandCollider.transform.position, headPos, headForward);
-        bool rightHandIn = IsHandInDoubleSphere(rightHandCollider.transform.position, headPos, headForward);
-        bool handsInTrigger = leftHandIn && rightHandIn;
-
-        if (!isMoving && Time.time - lastMoveTime >= moveDuration)
+        if (requireExit)
         {
-            if (requireExit)
+            if (!handsInTrigger) requireExit = false;
+        }
+        else if (handsInTrigger)
+        {
+            if (!handsWereInTrigger)
             {
-                if (!handsInTrigger) requireExit = false;
-            }
-            else if (handsInTrigger)
-            {
-                if (!handsWereInTrigger)
-                {
-                    RuntimeManager.PlayOneShot(catchSoundEvent);
-                    Vector3 moveDirection = CalculateMoveDirection();
-                    StartCoroutine(MovePlayer(moveDirection));
-                    requireExit = true;
-                    lastMoveTime = Time.time;
-                }
+                RuntimeManager.PlayOneShot(catchSoundEvent);
+                Vector3 moveDirection = CalculateMoveDirection();
+                StartCoroutine(MovePlayer(moveDirection));
+                requireExit = true;
+                lastMoveTime = Time.time;
             }
         }
-
-        handsWereInTrigger = handsInTrigger;
     }
+
+    handsWereInTrigger = handsInTrigger;
+}
+
 
     // 获取水平方向的前向向量（忽略头部上下倾斜）
     private Vector3 GetHorizontalForward(Transform head)
@@ -137,7 +148,7 @@ public class PlayerMovementSystem : MonoBehaviour
         isMoving = true;
         currentMoveCount++;
 
-        if (currentMoveCount == 3 && objectToEnableOn2ndMove != null)
+        if (currentMoveCount == 1 && objectToEnableOn2ndMove != null)
         {
             objectToEnableOn2ndMove.SetActive(true);
             Debug.Log("第2次移动时启用了指定物体");
