@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
+using Unity.XR.PXR;
 using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine.Rendering.Universal;
@@ -14,6 +15,9 @@ public class PlayerMovementSystem : MonoBehaviour
     public Collider rightHandCollider;
     public Transform head;
     public Camera vrCamera;
+    
+
+
 
     [Header("移动参数")]
     public float moveDistance = 1f;
@@ -31,14 +35,16 @@ public class PlayerMovementSystem : MonoBehaviour
     [Header("触发区域")]
     public float triggerRadius = 0.3f;
     public float triggerHeight = 0.5f;
+    public float frontSphereDistance = 0.5f;
+    public float sphereRadius = 0.4f;
 
     [Header("阶段触发物体")]
     public GameObject objectToEnableOn2ndMove;
     public GameObject objectToEnableOn5thMove;
 
     [Header("植物生长")]
-    public Transform plantModel;        // 🌱 新增：要生长的植物模型
-    public float growthPerMove = 0.1f;  // 🌱 新增：每次生长的 Y 轴增量
+    public Transform plantModel;
+    public float growthPerMove = 0.1f;
 
     private bool isMoving;
     private int currentMoveCount;
@@ -53,12 +59,10 @@ public class PlayerMovementSystem : MonoBehaviour
     public string bloomParameterName = "bloom";
 
     [Header("渐变出现的物体")]
-    public GameObject scaleUpObject;              // 要启用并放大的物体
-    public Vector3 targetScale = Vector3.one;     // 最终缩放大小
-    public float scaleUpDuration = 0.5f;          // 缩放持续时间
-    public float scaleUpDelay = 1f; // 启用前的延迟时间（秒）
-
-
+    public GameObject scaleUpObject;
+    public Vector3 targetScale = Vector3.one;
+    public float scaleUpDuration = 0.5f;
+    public float scaleUpDelay = 1f;
 
     private float lastMoveTime = -Mathf.Infinity;
 
@@ -71,9 +75,11 @@ public class PlayerMovementSystem : MonoBehaviour
     {
         if (maxMoveCount > 0 && currentMoveCount >= maxMoveCount) return;
 
-        Vector3 triggerPos = head.position + head.up * triggerHeight;
-        bool leftHandIn = Vector3.Distance(leftHandCollider.transform.position, triggerPos) < triggerRadius;
-        bool rightHandIn = Vector3.Distance(rightHandCollider.transform.position, triggerPos) < triggerRadius;
+        Vector3 headPos = head.position;
+        Vector3 headForward = GetHorizontalForward(head);
+
+        bool leftHandIn = IsHandInDoubleSphere(leftHandCollider.transform.position, headPos, headForward);
+        bool rightHandIn = IsHandInDoubleSphere(rightHandCollider.transform.position, headPos, headForward);
         bool handsInTrigger = leftHandIn && rightHandIn;
 
         if (!isMoving && Time.time - lastMoveTime >= moveDuration)
@@ -98,6 +104,23 @@ public class PlayerMovementSystem : MonoBehaviour
         handsWereInTrigger = handsInTrigger;
     }
 
+    // 获取水平方向的前向向量（忽略头部上下倾斜）
+    private Vector3 GetHorizontalForward(Transform head)
+    {
+        Vector3 forward = head.forward;
+        forward.y = 0; // 忽略垂直分量
+        return forward.normalized;
+    }
+
+    private bool IsHandInDoubleSphere(Vector3 handPos, Vector3 headPos, Vector3 headForward)
+    {
+        Vector3 topSphere = headPos + Vector3.up * triggerHeight;
+        Vector3 frontSphere = topSphere + headForward * frontSphereDistance;
+
+        return Vector3.Distance(handPos, topSphere) < sphereRadius ||
+               Vector3.Distance(handPos, frontSphere) < sphereRadius;
+    }
+
     Vector3 CalculateMoveDirection()
     {
         Vector3 headUp = head.up;
@@ -109,60 +132,56 @@ public class PlayerMovementSystem : MonoBehaviour
         return headUp.normalized;
     }
 
-IEnumerator MovePlayer(Vector3 direction)
-{
-    isMoving = true;
-    currentMoveCount++;
-
-    // 阶段触发
-    if (currentMoveCount == 3 && objectToEnableOn2ndMove != null)
+    IEnumerator MovePlayer(Vector3 direction)
     {
-        objectToEnableOn2ndMove.SetActive(true);
-        Debug.Log("第2次移动时启用了指定物体");
-    }
-    else if (currentMoveCount == 8 && objectToEnableOn5thMove != null)
-    {
-        objectToEnableOn5thMove.SetActive(true);
-        Debug.Log("第5次移动时启用了指定物体");
-    }
+        isMoving = true;
+        currentMoveCount++;
 
-    // 禁用 Renderer Features
-    if (currentMoveCount >= disableAfterMoves && !hasDisabledFeatures)
-        DisableRendererFeatures();
+        if (currentMoveCount == 3 && objectToEnableOn2ndMove != null)
+        {
+            objectToEnableOn2ndMove.SetActive(true);
+            Debug.Log("第2次移动时启用了指定物体");
+        }
+        else if (currentMoveCount == 8 && objectToEnableOn5thMove != null)
+        {
+            objectToEnableOn5thMove.SetActive(true);
+            Debug.Log("第5次移动时启用了指定物体");
+        }
 
-    // 插值移动 + 植物同步增长
-    Vector3 startPos = xrOrigin.transform.position;
-    Vector3 targetPos = startPos + direction * moveDistance;
+        if (currentMoveCount >= disableAfterMoves && !hasDisabledFeatures)
+            DisableRendererFeatures();
 
-    Vector3 plantStartScale = plantModel != null ? plantModel.localScale : Vector3.zero;
-    Vector3 plantTargetScale = plantModel != null ? new Vector3(
-        plantStartScale.x,
-        plantStartScale.y + growthPerMove,
-        plantStartScale.z
-    ) : Vector3.zero;
+        Vector3 startPos = xrOrigin.transform.position;
+        Vector3 targetPos = startPos + direction * moveDistance;
 
-    float elapsed = 0f;
-    while (elapsed < moveDuration)
-    {
-        float t = elapsed / moveDuration;
-        xrOrigin.transform.position = Vector3.Lerp(startPos, targetPos, t);
+        Vector3 plantStartScale = plantModel != null ? plantModel.localScale : Vector3.zero;
+        Vector3 plantTargetScale = plantModel != null ? new Vector3(
+            plantStartScale.x,
+            plantStartScale.y + growthPerMove,
+            plantStartScale.z
+        ) : Vector3.zero;
+
+        float elapsed = 0f;
+        while (elapsed < moveDuration)
+        {
+            float t = elapsed / moveDuration;
+            xrOrigin.transform.position = Vector3.Lerp(startPos, targetPos, t);
+
+            if (plantModel != null)
+                plantModel.localScale = Vector3.Lerp(plantStartScale, plantTargetScale, t);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        xrOrigin.transform.position = targetPos;
 
         if (plantModel != null)
-            plantModel.localScale = Vector3.Lerp(plantStartScale, plantTargetScale, t);
+            plantModel.localScale = plantTargetScale;
 
-        elapsed += Time.deltaTime;
-        yield return null;
+        isMoving = false;
+        Debug.Log($"移动完成 ({currentMoveCount}/{maxMoveCount}) 方向: {direction}");
     }
-
-    xrOrigin.transform.position = targetPos;
-
-    if (plantModel != null)
-        plantModel.localScale = plantTargetScale;
-
-    isMoving = false;
-
-    Debug.Log($"移动完成 ({currentMoveCount}/{maxMoveCount}) 方向: {direction}");
-}
 
     void DisableRendererFeatures()
     {
@@ -198,12 +217,12 @@ IEnumerator MovePlayer(Vector3 direction)
                 Debug.Log($"已设置Animator参数 {bloomParameterName} = true");
             }
             else Debug.LogWarning("未分配目标Animator，无法设置bloom参数");
+
             if (scaleUpObject != null)
             {
                 scaleUpObject.SetActive(true);
                 StartCoroutine(ScaleUpObject(scaleUpObject, targetScale, scaleUpDuration, scaleUpDelay));
             }
-
 
             RuntimeManager.PlayOneShot(blossom);
             hasDisabledFeatures = true;
@@ -242,32 +261,35 @@ IEnumerator MovePlayer(Vector3 direction)
         Gizmos.color = requireExit ? Color.yellow :
                       (maxMoveCount > 0 && currentMoveCount >= maxMoveCount) ? Color.red : Color.cyan;
 
-        Vector3 triggerPos = head.position + head.up * triggerHeight;
-        Gizmos.DrawWireSphere(triggerPos, triggerRadius);
-        Gizmos.DrawLine(triggerPos, triggerPos + CalculateMoveDirection() * moveDistance * 0.5f);
+        Vector3 headPos = head.position;
+        Vector3 headForward = GetHorizontalForward(head);
+        Vector3 topSphere = headPos + Vector3.up * triggerHeight;
+        Vector3 frontSphere = topSphere + headForward * frontSphereDistance;
+
+        Gizmos.DrawWireSphere(topSphere, sphereRadius);
+        Gizmos.DrawWireSphere(frontSphere, sphereRadius);
+        Gizmos.DrawLine(topSphere, frontSphere);
+
+        Gizmos.DrawLine(topSphere, topSphere + Vector3.up * moveDistance * 0.5f);
     }
 
-IEnumerator ScaleUpObject(GameObject obj, Vector3 finalScale, float duration, float delay)
-{
-
-
-    obj.SetActive(true);
-    Transform objTransform = obj.transform;
-    Vector3 initialScale = Vector3.zero;
-    float elapsed = 0f;
-
-    objTransform.localScale = initialScale;
-    yield return new WaitForSeconds(delay);
-    while (elapsed < duration)
+    IEnumerator ScaleUpObject(GameObject obj, Vector3 finalScale, float duration, float delay)
     {
-        float t = elapsed / duration;
-        objTransform.localScale = Vector3.Lerp(initialScale, finalScale, t);
-        elapsed += Time.deltaTime;
-        yield return null;
+        obj.SetActive(true);
+        Transform objTransform = obj.transform;
+        Vector3 initialScale = Vector3.zero;
+        float elapsed = 0f;
+
+        objTransform.localScale = initialScale;
+        yield return new WaitForSeconds(delay);
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            objTransform.localScale = Vector3.Lerp(initialScale, finalScale, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        objTransform.localScale = finalScale;
     }
-
-    objTransform.localScale = finalScale;
-}
-
-
 }
