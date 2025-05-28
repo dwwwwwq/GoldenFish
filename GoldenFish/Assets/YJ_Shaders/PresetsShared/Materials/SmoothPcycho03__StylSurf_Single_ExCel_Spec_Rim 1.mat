@@ -31,7 +31,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - SRPDEFAULTUNLIT
-  m_LockedProperties: _FlatSpecularSize
+  m_LockedProperties: _CelNumSteps _FlatSpecularSize
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
