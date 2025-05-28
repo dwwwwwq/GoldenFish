@@ -1,5 +1,6 @@
 Shader "Custom/RimLightRGB"
 {
+
     
     Properties
     {
@@ -18,6 +19,7 @@ Shader "Custom/RimLightRGB"
             "RenderPipeline" = "UniversalRenderPipeline"
             "IgnoreProjector" = "True"
             "Queue" = "Transparent"
+
         }
         Pass
         {
@@ -38,7 +40,8 @@ Shader "Custom/RimLightRGB"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-        // 添加VR支持
+
+        // 娣诲姞VR鏀寔
         #pragma multi_compile_instancing
         #pragma instancing_options renderinglayer
         #pragma multi_compile _ _USE_DRAW_PROCEDURAL
@@ -46,7 +49,7 @@ Shader "Custom/RimLightRGB"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
         #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
-        // 包含VR相关功能
+        // 鍖呭惈VR鐩稿叧鍔熻兘
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl"
 
         CBUFFER_START(UnityPerMaterial)
@@ -93,7 +96,7 @@ Shader "Custom/RimLightRGB"
             UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
             float3 normal = normalize(i.normalWS);
-            // 修改相机位置获取方式以支持VR
+            // 淇敼鐩告満浣嶇疆鑾峰彇鏂瑰紡浠ユ敮鎸乂R
             float3 viewDirection = normalize(GetWorldSpaceViewDir(i.positionWS));
 
             float NdotV = dot(normal, viewDirection);
@@ -107,5 +110,6 @@ Shader "Custom/RimLightRGB"
 
         ENDHLSL
     }
+
     }
 }
