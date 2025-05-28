@@ -2,26 +2,27 @@ using UnityEngine;
 using UnityEngine.XR;
 using System.Collections;
 using Unity.XR.CoreUtils;
+using FMODUnity;
 
 public class RedLightGreenLightGame : MonoBehaviour
 {
-    [Header("Íæ¾ßĞÜÉèÖÃ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public GameObject toyBear;
     public float activationDistance = 5f;
     public float safeZoneDistance = 2f;
     public float turnDuration = 2f;
 
-    [Header("Ê±¼äÉèÖÃ")]
+    [Header("Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public float warningDuration = 1f;
     public float[] possibleRedDurations = { 2.0f, 2.3f, 2.7f, 3.0f, 3.3f, 3.7f, 4.0f };
     public float[] possibleGreenDurations = { 3.0f, 3.5f, 4.0f, 4.5f, 5.0f, 5.5f, 6.0f };
 
-    [Header("Íæ¼Ò¼ì²âÉèÖÃ")]
+    [Header("ï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public float headMovementThreshold = 0.05f;
     public float handMovementThreshold = 0.1f;
     public float checkInterval = 0.2f;
 
-    [Header("ÊÓ¾õĞ§¹û")]
+    [Header("ï¿½Ó¾ï¿½Ğ§ï¿½ï¿½")]
     public Light directionalLight;
     public float dimIntensity = 0.3f;
     private float originalIntensity;
@@ -29,14 +30,14 @@ public class RedLightGreenLightGame : MonoBehaviour
     public Color redLightColor = Color.red;
     public Color greenLightColor = Color.green;
 
-    [Header("Íæ¼ÒÉèÖÃ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public Transform xrOrigin;
     public Transform head;
     public Transform leftHand;
     public Transform rightHand;
     public Vector3 startPosition;
 
-    [Header("°²È«ÇøÓòÉèÖÃ")]
+    [Header("ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public float safeZoneBuffer = 0.5f;
 
     private bool isInSafeZone = false;
@@ -50,6 +51,15 @@ public class RedLightGreenLightGame : MonoBehaviour
     private bool isFacingPlayer = false;
     private float currentGreenLightDuration;
     private float currentRedLightDuration;
+
+    [Header("FMODï¿½ï¿½ï¿½ï¿½")]
+    [EventRef] public string alarm;
+
+    [Header("é¦–æ¬¡è­¦æŠ¥è§¦å‘å£°éŸ³")]
+    public GameObject firstAlarmItem;
+    private bool hasTriggeredFirstAlarm = false;
+    
+
 
     void Start()
     {
@@ -115,7 +125,7 @@ public class RedLightGreenLightGame : MonoBehaviour
     void ExitGame()
     {
         if (currentState == GameState.Inactive) return;
-        Debug.Log("½øÈë°²È«ÇøÓò£¬ÓÎÏ·½áÊø");
+        Debug.Log("ï¿½ï¿½ï¿½ë°²È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½");
         currentState = GameState.Inactive;
         directionalLight.intensity = originalIntensity;
         directionalLight.color = Color.white;
@@ -130,19 +140,33 @@ public class RedLightGreenLightGame : MonoBehaviour
         directionalLight.color = greenLightColor;
         directionalLight.intensity = originalIntensity;
         StartCoroutine(MonitorPlayerMovement());
-        Debug.Log($"ÓÎÏ·¿ªÊ¼! ÂÌµÆÊ±³¤:{currentGreenLightDuration:F1}Ãë - ÏÖÔÚ¿ÉÒÔÒÆ¶¯");
+        Debug.Log($"ï¿½ï¿½Ï·ï¿½ï¿½Ê¼! ï¿½Ìµï¿½Ê±ï¿½ï¿½:{currentGreenLightDuration:F1}ï¿½ï¿½ - ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½");
     }
 
-    IEnumerator TransitionToRedLight()
+IEnumerator TransitionToRedLight()
+{
+    currentState = GameState.Warning;
+    stateTimer = warningDuration;
+    directionalLight.intensity = dimIntensity;
+    directionalLight.color = warningColor;
+    RuntimeManager.PlayOneShot(alarm);
+    Debug.Log("è­¦å‘Š! å³å°†è½¬å‘");
+
+    // é¦–æ¬¡è§¦å‘è­¦æŠ¥ï¼Œæ¿€æ´»ç‰©å“
+    if (!hasTriggeredFirstAlarm)
     {
-        currentState = GameState.Warning;
-        stateTimer = warningDuration;
-        directionalLight.intensity = dimIntensity;
-        directionalLight.color = warningColor;
-        Debug.Log("¾¯¸æ! Íæ¾ßĞÜ¼´½«×ªÉí");
-        yield return new WaitForSeconds(warningDuration);
-        StartCoroutine(TurnToFacePlayer());
+        hasTriggeredFirstAlarm = true;
+        if (firstAlarmItem != null)
+        {
+            firstAlarmItem.SetActive(true);
+            Debug.Log("é¦–æ¬¡è¿›å…¥è­¦æŠ¥çŠ¶æ€ï¼Œå·²å¯ç”¨ç‰©å“ã€‚");
+        }
     }
+
+    yield return new WaitForSeconds(warningDuration);
+    StartCoroutine(TurnToFacePlayer());
+}
+
 
     IEnumerator TurnToFacePlayer()
     {
@@ -166,13 +190,13 @@ public class RedLightGreenLightGame : MonoBehaviour
 
         toyBear.transform.rotation = endRotation;
         isFacingPlayer = true;
-        GenerateRandomDurations(); // ĞÂÔö£ººìµÆ¿ªÊ¼Ê±ÖØĞÂÉú³ÉÊ±¼ä
+        GenerateRandomDurations(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¿ï¿½Ê¼Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
         currentState = GameState.RedLight;
         directionalLight.color = redLightColor;
         directionalLight.intensity = originalIntensity;
         stateTimer = currentRedLightDuration;
         isTurning = false;
-        Debug.Log($"Íæ¾ßĞÜ×ªÉíÁË! ºìµÆÊ±³¤:{currentRedLightDuration:F1}Ãë - ÏÖÔÚ²»ÄÜÒÆ¶¯");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½ï¿½Ê±ï¿½ï¿½:{currentRedLightDuration:F1}ï¿½ï¿½ - ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½");
         RecordCurrentPositions();
     }
 
@@ -198,12 +222,12 @@ public class RedLightGreenLightGame : MonoBehaviour
 
         toyBear.transform.rotation = endRotation;
         isFacingPlayer = false;
-        GenerateRandomDurations(); // ĞÂÔö£ºÂÌµÆ¿ªÊ¼Ê±ÖØĞÂÉú³ÉÊ±¼ä
+        GenerateRandomDurations(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌµÆ¿ï¿½Ê¼Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
         currentState = GameState.GreenLight;
         directionalLight.color = greenLightColor;
         stateTimer = currentGreenLightDuration;
         isTurning = false;
-        Debug.Log($"Íæ¾ßĞÜ±³¶ÔÄãÁË! ÂÌµÆÊ±³¤:{currentGreenLightDuration:F1}Ãë - ÏÖÔÚ¿ÉÒÔÒÆ¶¯");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½Ü±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½! ï¿½Ìµï¿½Ê±ï¿½ï¿½:{currentGreenLightDuration:F1}ï¿½ï¿½ - ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½");
     }
 
     IEnumerator MonitorPlayerMovement()
@@ -241,7 +265,7 @@ public class RedLightGreenLightGame : MonoBehaviour
 
     void PlayerCaughtMoving()
     {
-        Debug.Log("Äã±»×¥µ½ÒÆ¶¯ÁË! ÓÎÏ·Ê§°Ü");
+        Debug.Log("ï¿½ã±»×¥ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½! ï¿½ï¿½Ï·Ê§ï¿½ï¿½");
         xrOrigin.position = startPosition;
         SetBearFacingPlayer(false);
         currentState = GameState.Inactive;

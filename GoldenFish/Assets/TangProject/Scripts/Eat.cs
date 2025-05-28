@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using FMODUnity;
 
 public class Eat : MonoBehaviour
 {
@@ -10,30 +10,37 @@ public class Eat : MonoBehaviour
     public float fallDistance = 10f; // 下落的距离
     public float fallSpeed = 5f; // 下落的速度
 
+    [EventRef] public string catchSoundEvent;
+
     private bool objectFalling = false; // 判断物体是否已经开始下落
+    public float fallBall;
 
     // 触发碰撞时调用的方法
-    private void OnTriggerEnter(Collider other)
+private void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag(prefabTag))
     {
-        // 判断碰撞的物体是否为指定标签的预制体
-        if (other.CompareTag(prefabTag))
+        score++;
+        RuntimeManager.PlayOneShot(catchSoundEvent);
+        Debug.Log("Score: " + score);
+
+        // 通知 SinkInWater，必须先找它
+        SinkInWater sinkScript = FindObjectOfType<SinkInWater>();
+        if (sinkScript != null)
         {
-            // 增加计数器
-            score++;
+            sinkScript.NotifyObjectEaten(other.gameObject);
+        }
 
-            // 输出当前分数
-            Debug.Log("Score: " + score);
+        // 销毁
+        Destroy(other.gameObject);
 
-            // 销毁被碰撞的预制体
-            Destroy(other.gameObject);
-
-            // 判断是否达到第七个，启动下落物体
-            if (score == 7 && !objectFalling)
-            {
-                StartFallingObject();
-            }
+        if (score == fallBall && !objectFalling)
+        {
+            StartFallingObject();
         }
     }
+}
+
 
     // 启动下落物体的方法
     private void StartFallingObject()

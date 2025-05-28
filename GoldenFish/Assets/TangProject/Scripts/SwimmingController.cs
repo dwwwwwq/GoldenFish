@@ -1,4 +1,6 @@
 using UnityEngine;
+using FMODUnity;
+using System.Collections.Generic;
 
 public class SwimmingController : MonoBehaviour
 {
@@ -22,6 +24,10 @@ public class SwimmingController : MonoBehaviour
     public float strongFlapThreshold = 20f;
     public float swingDelay = 0.5f;
 
+    [Header("Activation List")]
+    public List<GameObject> thingsToActivate; // 👈 新增：要启用的对象列表
+    public float startFalling;
+
     private Rigidbody playerRigidbody;
     private float lastSwingTime;
     private Quaternion lastLeftRotation;
@@ -30,6 +36,10 @@ public class SwimmingController : MonoBehaviour
     private Vector3 upWard = new Vector3(0f, 2f, 0f).normalized;
 
     private bool hasFirstFlapOccurred = false;
+    private int flapCount = 0;                 // 👈 新增：统计 flap 次数
+    private bool hasActivatedList = false;     // 👈 新增：只激活一次
+
+    [EventRef] public string catchSoundEvent;
 
     private void Start()
     {
@@ -80,13 +90,25 @@ public class SwimmingController : MonoBehaviour
                 // Determine flap strength
                 if (leftRotationDelta > strongFlapThreshold && rightRotationDelta > strongFlapThreshold)
                 {
-                    Flap(strongFlapForce); // Strong flap
+                    Flap(strongFlapForce);
                 }
                 else
                 {
-                    Flap(lightFlapForce); // Light flap
+                    Flap(lightFlapForce);
+                }
+
+                RuntimeManager.PlayOneShot(catchSoundEvent);
+
+                flapCount++; // 👈 增加 flap 次数
+
+                // 👇 达到三次后激活列表中的物体，只执行一次
+                if (flapCount >= startFalling && !hasActivatedList)
+                {
+                    hasActivatedList = true;
+                    ActivateThings();
                 }
             }
+
             lastSwingTime = Time.time;
         }
 
@@ -100,6 +122,15 @@ public class SwimmingController : MonoBehaviour
         playerRigidbody.AddForce(flapForceDirection * flapPower + upWard * upForce, ForceMode.VelocityChange);
     }
 
+    private void ActivateThings()
+    {
+        foreach (var obj in thingsToActivate)
+        {
+            if (obj != null)
+                obj.SetActive(true);
+        }
+    }
+
     public void TriggerFlap()
     {
         Flap(lightFlapForce);
@@ -108,5 +139,7 @@ public class SwimmingController : MonoBehaviour
     public void ResetFirstFlap()
     {
         hasFirstFlapOccurred = false;
+        flapCount = 0;
+        hasActivatedList = false;
     }
 }
