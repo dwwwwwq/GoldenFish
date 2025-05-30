@@ -1,143 +1,207 @@
 using UnityEngine;
-using System.Collections;
 using UnityEngine.XR;
+using System.Collections;
+using System.Collections.Generic;
 
-public class PicoScreenshot : MonoBehaviour
+public class PhotoCapture : MonoBehaviour
 {
-    [Header("截图设置")]
-    public GameObject screenshotPrefab;  // 照片预制体（建议使用Quad）
-    public float photoWidth = 0.3f;      // 单张照片宽度（米）
+    [Header("Settings")]
+    public int maxPhotosPerRow = 5;          // 每行最多照片数量
+    public float photoWidth = 0.3f;          // 照片宽度（单位：米）
+    public float spacing = 0.05f;            // 照片间最小间距
+    public float maxRotation = 15f;          // 最大随机旋转角度
+    public float maxOffset = 0.1f;           // 最大随机偏移量
+    public float photoForwardOffset = 0.01f; // 照片在法线方向的偏移（避免Z-fighting）
+    public float topMargin = 0.5f;           // 顶部边距
+    public int maxPhotos = 20;               // 最大照片数量
+    public LayerMask captureLayerMask;       // 设置需要捕捉的层
 
-    [Header("照片墙设置")]
-    public Transform photoWall;          // 照片墙的父物体
-    public Vector2Int gridSize = new Vector2Int(4, 3); // 行列数量
-    public Vector2 spacing = new Vector2(0.05f, 0.05f); // 照片间距
+    [Header("References")]
+    public Transform photoWall;             // 陈列照片的平面
+    public Camera captureCamera;            // 用于截图的相机
 
-    private Texture2D[] savedTextures;   // 存储所有截图
-    private int currentPhotoIndex = 0;   // 当前照片索引
-    private Vector3[,] photoPositions;   // 预计算的照片位置网格
-    private bool isTriggerPressed = false;
+    private List<GameObject> photos = new List<GameObject>();
+    private List<Vector3> gridPositions = new List<Vector3>(); // 存储所有网格位置
+    private int totalPhotosTaken = 0;       // 总共拍摄的照片数量
+    private bool isTriggerPressed = false;  // 跟踪扳机状态
+    private bool canTakePhoto = true;       // 控制是否允许拍照
+    private float rowHeight = 0f;           // 行高（根据照片比例计算）
+    private int originalCullingMask;        // 记录原始相机的culling mask
 
     void Start()
     {
-        InitializePhotoWall();
+        // 计算行高（基于照片宽高比）
+        rowHeight = photoWidth * (Screen.height / (float)Screen.width);
+
+        // 预先计算所有网格位置
+        PrecalculateGridPositions();
+
+        // 记录原始相机的culling mask
+        if (captureCamera != null)
+        {
+            originalCullingMask = captureCamera.cullingMask;
+        }
+    }
+
+    void PrecalculateGridPositions()
+    {
+        gridPositions.Clear();
+
+        int rows = Mathf.CeilToInt(maxPhotos / (float)maxPhotosPerRow);
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < maxPhotosPerRow; col++)
+            {
+                if (gridPositions.Count >= maxPhotos) break;
+
+                float xPos = col * (photoWidth + spacing);
+                float yPos = -row * (rowHeight + spacing) - topMargin;
+                gridPositions.Add(new Vector3(xPos, yPos, 0));
+            }
+        }
     }
 
     void Update()
     {
-        CheckControllerInput();
-    }
-
-    void InitializePhotoWall()
-    {
-        savedTextures = new Texture2D[gridSize.x * gridSize.y];
-        photoPositions = new Vector3[gridSize.x, gridSize.y];
-
-        // 计算照片墙左下角起点位置（按4:3比例调整）
-        Vector3 startPos = photoWall.position
-                         - photoWall.right * (gridSize.x - 1) * (photoWidth + spacing.x) / 2
-                         - photoWall.up * (gridSize.y - 1) * (photoWidth * 0.75f + spacing.y) / 2;
-
-        // 预计算所有照片位置
-        for (int x = 0; x < gridSize.x; x++)
-        {
-            for (int y = 0; y < gridSize.y; y++)
-            {
-                photoPositions[x, y] = startPos
-                                     + photoWall.right * x * (photoWidth + spacing.x)
-                                     + photoWall.up * y * (photoWidth * 0.75f + spacing.y);
-            }
-        }
-    }
-
-    void CheckControllerInput()
-    {
+        // 检测左手柄扳机
         InputDevice leftHand = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-        if (leftHand.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerValue))
+        if (leftHand.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerPressed))
         {
-            if (triggerValue && !isTriggerPressed)
+            // 只在扳机从释放状态变为按下状态时拍照
+            if (triggerPressed && !isTriggerPressed && canTakePhoto)
             {
-                isTriggerPressed = true;
-                TakeScreenshot();
+                StartCoroutine(CapturePhoto());
+                canTakePhoto = false; // 防止连续拍照
             }
-            else if (!triggerValue && isTriggerPressed)
+
+            // 当扳机释放时重置拍照能力
+            if (!triggerPressed)
             {
-                isTriggerPressed = false;
+                canTakePhoto = true;
             }
+
+            isTriggerPressed = triggerPressed; // 更新状态
         }
     }
 
-    void TakeScreenshot()
+    IEnumerator CapturePhoto()
     {
-        StartCoroutine(CaptureAndCrop());
-    }
-
-    IEnumerator CaptureAndCrop()
-    {
+        // 等待渲染结束
         yield return new WaitForEndOfFrame();
 
-        // 原始截图
-        Texture2D fullTex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGBA32, false);
-        fullTex.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-        fullTex.Apply();
+        // 创建截图纹理
+        RenderTexture renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
+        Camera mainCamera = Camera.main;
 
-        // 计算裁剪区域（保持宽度不变，裁剪高度）
-        int targetHeight = Screen.width * 3 / 4; // 计算4:3所需高度
-        int cropY = (Screen.height - targetHeight) / 2; // 上下各裁掉的部分
+        // 设置临时相机用于截图
+        captureCamera.CopyFrom(mainCamera);
 
-        // 创建4:3纹理
-        Texture2D croppedTex = new Texture2D(Screen.width, targetHeight, TextureFormat.RGBA32, false);
-
-        // 裁剪上下部分
-        Color[] pixels = fullTex.GetPixels(0, cropY, Screen.width, targetHeight);
-        croppedTex.SetPixels(pixels);
-        croppedTex.Apply();
-        Destroy(fullTex);
-
-        // 保存到照片墙
-        SavePhotoToWall(croppedTex);
-    }
-
-    void SavePhotoToWall(Texture2D newPhoto)
-    {
-        // 存储新照片
-        savedTextures[currentPhotoIndex] = newPhoto;
-        currentPhotoIndex = (currentPhotoIndex + 1) % (gridSize.x * gridSize.y);
-
-        // 更新照片墙显示
-        UpdatePhotoWallDisplay();
-    }
-
-    void UpdatePhotoWallDisplay()
-    {
-        // 清除现有照片
-        foreach (Transform child in photoWall)
+        // 应用自定义的culling mask来排除UI层
+        if (captureLayerMask != 0)
         {
-            Destroy(child.gameObject);
+            captureCamera.cullingMask = captureLayerMask;
         }
 
-        // 重新排列所有照片
-        for (int i = 0; i < savedTextures.Length; i++)
-        {
-            if (savedTextures[i] == null) continue;
+        captureCamera.targetTexture = renderTexture;
+        captureCamera.Render();
 
-            int x = i % gridSize.x;
-            int y = i / gridSize.x;
-            DisplayPhotoOnWall(savedTextures[i], photoPositions[x, y]);
-        }
+        // 读取渲染纹理
+        RenderTexture.active = renderTexture;
+        Texture2D photoTexture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+        photoTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        photoTexture.Apply();
+        RenderTexture.active = null;
+
+        // 清理资源
+        captureCamera.targetTexture = null;
+
+        // 恢复原始culling mask
+        captureCamera.cullingMask = originalCullingMask;
+
+        Destroy(renderTexture);
+
+        // 创建照片对象
+        CreatePhotoObject(photoTexture);
+
+        // 更新照片计数
+        totalPhotosTaken++;
     }
 
-    void DisplayPhotoOnWall(Texture2D texture, Vector3 position)
+    void CreatePhotoObject(Texture2D photoTexture)
     {
-        GameObject photo = Instantiate(screenshotPrefab, position, Quaternion.identity, photoWall);
-        photo.transform.rotation = photoWall.rotation;
+        // 创建照片材质
+        Material photoMaterial = new Material(Shader.Find("Unlit/Texture"));
+        photoMaterial.mainTexture = photoTexture;
 
-        // 固定4:3显示比例
-        photo.transform.localScale = new Vector3(photoWidth, photoWidth * 0.75f, 0.01f);
+        // 创建照片Quad
+        GameObject photo = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Destroy(photo.GetComponent<Collider>()); // 移除碰撞体
+        photo.name = "Photo_" + totalPhotosTaken;
+        photo.transform.SetParent(photoWall);
 
-        // 应用标准材质
-        Material newMat = new Material(Shader.Find("Unlit/Texture"));
-        newMat.mainTexture = texture;
-        photo.GetComponent<Renderer>().material = newMat;
+        // 设置材质和大小
+        photo.GetComponent<Renderer>().material = photoMaterial;
+        photo.transform.localScale = new Vector3(photoWidth, photoWidth * (photoTexture.height / (float)photoTexture.width), 1);
+
+        // 计算位置和旋转
+        PlacePhotoWithRandomness(photo.transform);
+
+        // 管理照片列表
+        ManagePhotoList(photo);
+    }
+
+    void PlacePhotoWithRandomness(Transform photo)
+    {
+        // 计算网格位置索引（循环使用位置）
+        int gridIndex = totalPhotosTaken % maxPhotos;
+
+        // 获取基础网格位置
+        Vector3 basePosition = gridPositions[gridIndex % gridPositions.Count];
+
+        // 应用随机偏移
+        Vector3 randomOffset = new Vector3(
+            Random.Range(-maxOffset, maxOffset),
+            Random.Range(-maxOffset, maxOffset),
+            0
+        );
+
+        // 应用随机旋转
+        float randomRotation = Random.Range(-maxRotation, maxRotation);
+
+        // 转换到墙面空间
+        Vector3 finalPosition = photoWall.TransformPoint(basePosition + randomOffset);
+        Quaternion finalRotation = photoWall.rotation * Quaternion.Euler(0, 0, randomRotation);
+
+        // 设置位置和旋转
+        photo.position = finalPosition;
+        photo.rotation = finalRotation;
+
+        // 沿法线方向轻微偏移避免重叠
+        photo.position += photoWall.forward * photoForwardOffset;
+    }
+
+    void ManagePhotoList(GameObject newPhoto)
+    {
+        // 如果照片数量超过最大值
+        if (photos.Count >= maxPhotos)
+        {
+            // 计算要替换的照片索引
+            int replaceIndex = totalPhotosTaken % maxPhotos;
+
+            // 确保索引在有效范围内
+            if (replaceIndex < photos.Count && photos[replaceIndex] != null)
+            {
+                // 销毁旧照片
+                Destroy(photos[replaceIndex]);
+
+                // 替换为新照片
+                photos[replaceIndex] = newPhoto;
+                return;
+            }
+        }
+
+        // 如果未达到上限，直接添加到列表
+        photos.Add(newPhoto);
     }
 }
