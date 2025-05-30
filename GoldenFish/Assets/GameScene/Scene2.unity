@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.7175651, g: 0.7478, b: 0.7934067, a: 1}
+  m_IndirectSpecularColor: {r: 0.4652572, g: 0.5108363, b: 0.58026046, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12263,6 +12263,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4482381636920471822, guid: 4b2eefc0ebd188b4998ceab21e540f2a,
         type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f4eb6bc474c5d554cbe11153c2fb6911, type: 2}
+    - target: {fileID: 4482381636920471822, guid: 4b2eefc0ebd188b4998ceab21e540f2a,
+        type: 3}
       propertyPath: m_CullingMode
       value: 1
       objectReference: {fileID: 0}
@@ -13600,6 +13605,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: frog
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4524dc0c1a429ba409e7a8f3c4720853,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5015415391883453526, guid: 4524dc0c1a429ba409e7a8f3c4720853,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -14647,6 +14657,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: teddybear
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ec327a55552b18c4a81778b7893cf0a5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
