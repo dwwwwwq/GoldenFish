@@ -12,8 +12,9 @@ public class SinkInWater : MonoBehaviour
     public float spawnInterval = 1f;
     public float shortInterval = 0.3f;
     public int sequentialDropCount = 3; // 前几颗采用逐个吃掉后生成
-    public float waitAfterEat = 1.5f; // 吃掉一个后等待再生成下一个
-
+    public float waitAfterEat = 1.5f;    // 吃掉一个后等待再生成下一个
+    public float initialCheckTimeout = 5f; // 初始测试等待时间
+    public float delayBeforeSequential = 1f;
 
     private float groundHeight;
     private Queue<GameObject> activeObjects = new Queue<GameObject>();
@@ -30,27 +31,65 @@ public class SinkInWater : MonoBehaviour
         }
 
         groundHeight = character.transform.position.y;
-        StartCoroutine(SpawnSequentially());
+        StartCoroutine(InitialCheckSpawn());
     }
 
-private IEnumerator SpawnSequentially()
+private IEnumerator InitialCheckSpawn()
 {
-    while (currentSpawnIndex < sequentialDropCount)
+    GameObject testObj = null;
+    bool eaten = false;
+
+    while (!eaten)
     {
-        SpawnObject(currentSpawnIndex);
-        currentSpawnIndex++;
+        Vector3 spawnPos = GetRandomSpawnPosition(referenceCollider);
+        testObj = Instantiate(prefab, spawnPos, Quaternion.identity);
+        activeObjects.Enqueue(testObj);
+        StartCoroutine(SinkObject(testObj));
 
-        // 等待该对象被吃掉（队列清空）
-        yield return new WaitUntil(() => activeObjects.Count == 0);
+        float timer = 0f;
 
-        // 吃掉后再等一小段时间
-        yield return new WaitForSeconds(waitAfterEat);
+        while (timer < initialCheckTimeout)
+        {
+            if (!activeObjects.Contains(testObj))
+            {
+                eaten = true;
+                break;
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!eaten)
+        {
+            if (activeObjects.Contains(testObj))
+            {
+                activeObjects.Dequeue();
+            }
+            Destroy(testObj);
+        }
     }
 
-    // 吃完前三个后，进入后续常规生成
-    StartCoroutine(SpawnRemaining());
+    // ✅ 成功吃掉后，先等待一段时间再进入原始逻辑
+    yield return new WaitForSeconds(delayBeforeSequential); // <-- 新增这行
+
+    StartCoroutine(SpawnSequentially());
 }
 
+
+    private IEnumerator SpawnSequentially()
+    {
+        while (currentSpawnIndex < sequentialDropCount)
+        {
+            SpawnObject(currentSpawnIndex);
+            currentSpawnIndex++;
+
+            yield return new WaitUntil(() => activeObjects.Count == 0);
+            yield return new WaitForSeconds(waitAfterEat);
+        }
+
+        StartCoroutine(SpawnRemaining());
+    }
 
     private IEnumerator SpawnRemaining()
     {

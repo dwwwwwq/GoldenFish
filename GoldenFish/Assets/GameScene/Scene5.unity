@@ -858,7 +858,7 @@ PrefabInstance:
     - target: {fileID: 51616034542222937, guid: 9932a10325fde674687a6d43392c3c14,
         type: 3}
       propertyPath: verticalJumpForce
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 51616034542222937, guid: 9932a10325fde674687a6d43392c3c14,
         type: 3}
@@ -7356,7 +7356,7 @@ Transform:
   m_GameObject: {fileID: 1630852843}
   serializedVersion: 2
   m_LocalRotation: {x: -0.17603572, y: -0.17603573, z: 0.68484414, w: 0.684844}
-  m_LocalPosition: {x: 268.02, y: 73.76, z: 6.6200027}
+  m_LocalPosition: {x: 268.02, y: 73.626, z: 6.6200027}
   m_LocalScale: {x: 180.10364, y: 46.3, z: 98.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
