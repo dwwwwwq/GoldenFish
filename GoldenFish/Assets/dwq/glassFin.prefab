@@ -165,7 +165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6135496163465452111
 Transform:
   m_ObjectHideFlags: 0
@@ -5229,8 +5229,13 @@ PrefabInstance:
     - target: {fileID: 854460441267197328, guid: dd6f1afb71c26cd498d9b81907d59b47,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4760751553408404121, guid: dd6f1afb71c26cd498d9b81907d59b47,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 86789f4414ee28846b0e6f6b6022fb4a, type: 2}
     - target: {fileID: 8231128201975991765, guid: dd6f1afb71c26cd498d9b81907d59b47,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5316,6 +5321,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3244807185278744399, guid: eb370e6ab87f4674dbe0d49f66947b78,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d304966c2b2afd14db89d459df96110c, type: 2}
     - target: {fileID: 6743112540113489828, guid: eb370e6ab87f4674dbe0d49f66947b78,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5496,6 +5506,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1314766719931278402, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
+      propertyPath: glass
+      value: 
+      objectReference: {fileID: 7576160907746185607}
+    - target: {fileID: 1314766719931278402, guid: 1a52b7742456ebf4a84e2be3a2788587,
+        type: 3}
       propertyPath: frosted
       value: 
       objectReference: {fileID: 4096664334825456014}
@@ -5597,7 +5612,7 @@ PrefabInstance:
     - target: {fileID: 8251198778821871249, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5508420114387573226, guid: 1a52b7742456ebf4a84e2be3a2788587, type: 3}
@@ -5605,14 +5620,15 @@ PrefabInstance:
     - {fileID: 699829768368339057, guid: 1a52b7742456ebf4a84e2be3a2788587, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6575720326288846887, guid: 1a52b7742456ebf4a84e2be3a2788587, type: 3}
+    - {fileID: 8251198778821871249, guid: 1a52b7742456ebf4a84e2be3a2788587, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2190573349877041203, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
-      insertIndex: 0
+      insertIndex: -1
       addedObject: {fileID: 3408274552839426015}
     - targetCorrespondingSourceObject: {fileID: 2190573349877041203, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
-      insertIndex: 1
+      insertIndex: -1
       addedObject: {fileID: 2176098360857540971}
     - targetCorrespondingSourceObject: {fileID: 2190573349877041203, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
@@ -5635,114 +5651,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7959543903900892072}
-    - targetCorrespondingSourceObject: {fileID: 8251198778821871249, guid: 1a52b7742456ebf4a84e2be3a2788587,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5638803185437906656}
   m_SourcePrefab: {fileID: 100100000, guid: 1a52b7742456ebf4a84e2be3a2788587, type: 3}
---- !u!1 &1940971633987846433 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8251198778821871249, guid: 1a52b7742456ebf4a84e2be3a2788587,
-    type: 3}
-  m_PrefabInstance: {fileID: 7524832147532941232}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5638803185437906656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940971633987846433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 888380afc233049ce9e618f9f36c8ba8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profile: {fileID: 0}
-  profileSync: 0
-  previewInEditor: 0
-  effectGroup: 0
-  effectGroupLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  alphaCutOff: 0
-  cullBackFaces: 1
-  ignoreObjectVisibility: 0
-  reflectionProbes: 0
-  depthClip: 0
-  ignore: 0
-  _highlighted: 1
-  fadeInDuration: 0
-  fadeOutDuration: 0
-  flipY: 0
-  constantWidth: 1
-  overlay: 0
-  overlayColor: {r: 1, g: 1, b: 1, a: 1}
-  overlayAnimationSpeed: 0.8
-  overlayMinIntensity: 0
-  overlayBlending: 1
-  outline: 0.165
-  outlineColor: {r: 0.007843138, g: 0.30588236, b: 0.6509804, a: 1}
-  outlineWidth: 0.45
-  outlineQuality: 1
-  outlineDownsampling: 2
-  outlineVisibility: 0
-  outlineOptimalBlit: 1
-  outlineBlitDebug: 0
-  outlineIndependent: 0
-  glow: 0
-  glowWidth: 5
-  glowQuality: 1
-  glowDownsampling: 2
-  glowHQColor: {r: 0.64, g: 1, b: 0, a: 1}
-  glowDithering: 1
-  glowBlendMode: 0
-  glowMagicNumber1: 0.75
-  glowMagicNumber2: 0.5
-  glowAnimationSpeed: 1
-  glowVisibility: 0
-  glowOptimalBlit: 1
-  glowBlitDebug: 0
-  glowPasses:
-  - offset: 4
-    alpha: 0.1
-    color: {r: 0.64, g: 1, b: 0, a: 1}
-  - offset: 3
-    alpha: 0.2
-    color: {r: 0.64, g: 1, b: 0, a: 1}
-  - offset: 2
-    alpha: 0.3
-    color: {r: 0.64, g: 1, b: 0, a: 1}
-  - offset: 1
-    alpha: 0.4
-    color: {r: 0.64, g: 1, b: 0, a: 1}
-  innerGlow: 0.27
-  innerGlowWidth: 0.74
-  innerGlowColor: {r: 1, g: 1, b: 1, a: 1}
-  innerGlowVisibility: 0
-  targetFX: 0
-  targetFXTexture: {fileID: 0}
-  targetFXColor: {r: 1, g: 1, b: 1, a: 1}
-  targetFXCenter: {fileID: 0}
-  targetFXRotationSpeed: 50
-  targetFXInitialScale: 4
-  targetFXEndScale: 1.5
-  targetFXTransitionDuration: 0.5
-  targetFXStayDuration: 1.5
-  seeThrough: 0
-  seeThroughOccluderMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  seeThroughOccluderThreshold: 0.3
-  seeThroughOccluderCheckInterval: 1
-  seeThroughIntensity: 0.8
-  seeThroughTintAlpha: 0.5
-  seeThroughTintColor: {r: 1, g: 0, b: 0, a: 1}
-  seeThroughNoise: 1
-  seeThroughBorder: 0
-  seeThroughBorderColor: {r: 0, g: 0, b: 0, a: 1}
-  seeThroughBorderWidth: 0.45
-  rmsCount: 1
 --- !u!1 &8450744154617442744 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2101635046389216776, guid: 1a52b7742456ebf4a84e2be3a2788587,

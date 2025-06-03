@@ -21,8 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: glowingGlass
-  m_Shader: {fileID: -6465566751694194690, guid: 07f22db5a3c81df4a9dab2113c62ce88,
-    type: 3}
+  m_Shader: {fileID: 4800000, guid: 843aec4ee0da10e43a1738e2f4747baf, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -86,6 +85,7 @@ Material:
     - _Tiling: 359
     - _ZWrite: 1
     - _emissionPower: 0.5
+    - _index: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
