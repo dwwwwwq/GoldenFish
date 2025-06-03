@@ -50,12 +50,18 @@ public class FixedZonePuppetMovement : MonoBehaviour
     public GameObject targetObject;
     public int triggerStepIndex = 6;
 
+    [Header("Disable Trigger")] // 新增部分
+    public GameObject disableTriggerObject; // 需要靠近的物体
+    public float disableDistance = 1.0f; // 触发禁用的距离
+    public bool disableMovement = true; // 是否禁用移动功能
+
     private GameObject leftZone;
     private GameObject rightZone;
     private bool isMoving;
     private float lastStepTime;
     private bool isForwardPosition = true;
     private int stepCount = 0;
+    private bool isDisabled; // 新增：是否已禁用状态
 
     void Start()
     {
@@ -74,10 +80,28 @@ public class FixedZonePuppetMovement : MonoBehaviour
         rightZone.transform.localScale = Vector3.one * rightZoneRadius * 2;
 
         UpdateZonePositions();
+        isDisabled = false; // 初始状态为启用
     }
 
     void Update()
     {
+        // 新增：检查距离并更新禁用状态
+        CheckDistanceToObject();
+
+        // 如果处于禁用状态，隐藏区域并直接返回
+        if (isDisabled)
+        {
+            leftZone.SetActive(false);
+            rightZone.SetActive(false);
+            return;
+        }
+        else
+        {
+            // 确保区域可见
+            leftZone.SetActive(true);
+            rightZone.SetActive(true);
+        }
+
         if (isMoving || Time.time < lastStepTime + cooldown) return;
 
         UpdateZonePositions();
@@ -92,6 +116,35 @@ public class FixedZonePuppetMovement : MonoBehaviour
         {
             StartCoroutine(PerformStep());
             RuntimeManager.PlayOneShot(footstep);
+        }
+    }
+
+    // 新增：距离检测方法
+    private void CheckDistanceToObject()
+    {
+        if (disableTriggerObject == null) return;
+
+        // 计算头部到目标物体的距离
+        float distance = Vector3.Distance(head.position, disableTriggerObject.transform.position);
+
+        // 当进入禁用距离时
+        if (distance <= disableDistance)
+        {
+            if (!isDisabled)
+            {
+                // 进入禁用状态
+                isDisabled = true;
+                Debug.Log("靠近物体，禁用移动");
+            }
+        }
+        else
+        {
+            if (isDisabled)
+            {
+                // 离开禁用状态
+                isDisabled = false;
+                Debug.Log("离开物体，启用移动");
+            }
         }
     }
 
