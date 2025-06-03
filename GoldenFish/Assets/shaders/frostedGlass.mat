@@ -21,45 +21,36 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: frostedGlass
-  m_Shader: {fileID: -6465566751694194690, guid: 19d2f3b00c145f34baa26e3000b3f221,
+  m_Shader: {fileID: -6465566751694194690, guid: 07f22db5a3c81df4a9dab2113c62ce88,
     type: 3}
-  m_Parent: {fileID: 2100000, guid: 60017250dbd7a3b48bfe3016d248f64f, type: 2}
+  m_Parent: {fileID: 2100000, guid: 3b6f9da365cbd66418ef0bd9eb1b5555, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - _BaseTex:
-        m_Texture: {fileID: 2800000, guid: 08ef20a01c156e1428ca81211ca1275d, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Terastal_Triangles:
-        m_Texture: {fileID: 2800000, guid: 766a7edc5f25e3b4daafb5554da17927, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Color_Reflection_Strength: 0.2
-    - _Cycle_Speed: 0.1
     - _DstBlend: 10
-    - _FresnelPower: 1.83
-    - _Metallic: 0
+    - _DstBlendAlpha: 10
+    - _GlossMapScale: 1
+    - _GlossyReflections: 1
+    - _Parallax: 0.02
     - _ReflectionStrength: 0.75
     - _Smoothness: 0
     - _Surface: 1
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.60792685, g: 0.7882696, b: 0.8867924, a: 0.827451}
-    - _Color: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 0.827451}
-    - _EmissiveColor: {r: 19.775562, g: 69.21446, b: 118.035385, a: 1}
-    - _Reflection_Thresholds: {r: 0.85, g: 1, b: 0, a: 0}
+    - _Color: {r: 0.60792685, g: 0.7882696, b: 0.8867924, a: 0.827451}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _TintColor: {r: 0, g: 1, b: 0.8042793, a: 0}
   m_BuildTextureStacks: []

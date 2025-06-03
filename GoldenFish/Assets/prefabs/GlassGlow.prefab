@@ -4978,6 +4978,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 352987869493343557, guid: 1a52b7742456ebf4a84e2be3a2788587,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 699829768368339057, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
       propertyPath: m_UseGravity
@@ -5016,7 +5021,7 @@ PrefabInstance:
     - target: {fileID: 2101635046389216776, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
       propertyPath: m_Name
-      value: glassNew
+      value: GlassGlow
       objectReference: {fileID: 0}
     - target: {fileID: 2101635046389216776, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
@@ -5088,6 +5093,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5508420114387573226, guid: 1a52b7742456ebf4a84e2be3a2788587,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6575720326288846887, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
       propertyPath: m_Layer
@@ -5132,6 +5142,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7432192601121249681}
+    - targetCorrespondingSourceObject: {fileID: 2101635046389216776, guid: 1a52b7742456ebf4a84e2be3a2788587,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3808671974018682817}
     - targetCorrespondingSourceObject: {fileID: 8251198778821871249, guid: 1a52b7742456ebf4a84e2be3a2788587,
         type: 3}
       insertIndex: -1
@@ -5359,6 +5373,22 @@ MonoBehaviour:
   OverrideAttenuation: 1
   OverrideMinDistance: 120
   OverrideMaxDistance: 200
+--- !u!114 &3808671974018682817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6293375199285309962}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4023e5226264df4aa9ba9e0daab6780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectA: {fileID: 0}
+  objectB: {fileID: 0}
+  stickDistance: 1
+  moveSpeed: 5
 --- !u!1001 &6729792757133488713
 PrefabInstance:
   m_ObjectHideFlags: 0

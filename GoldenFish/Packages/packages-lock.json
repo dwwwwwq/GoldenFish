@@ -74,7 +74,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.pico.livepreview": {
-      "version": "file:F:/声音/Unity Live Preview Plugin-1.0.5-20250211",
+      "version": "file:D:/PICO/Unity Live Preview Plugin-1.0.5-20250211",
       "depth": 0,
       "source": "local",
       "dependencies": {
@@ -231,7 +231,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.openxr.picoxr": {
-      "version": "file:F:/声音/PICO Unity OpenXR Integration SDK-1.3.0-20241011",
+      "version": "file:D:/PICO/PICO Unity OpenXR Integration SDK-1.3.0-20241011",
       "depth": 0,
       "source": "local",
       "dependencies": {
