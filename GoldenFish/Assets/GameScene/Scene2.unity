@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.7175651, g: 0.7478, b: 0.7934067, a: 1}
+  m_IndirectSpecularColor: {r: 0.4652572, g: 0.5108363, b: 0.58026046, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5960,6 +5960,29 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 888110882}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &97210425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97210418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/SoundFX/FX_GlassBall
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 10
+  OverrideMaxDistance: 70
 --- !u!1 &104548094
 GameObject:
   m_ObjectHideFlags: 0
@@ -8969,7 +8992,7 @@ PrefabInstance:
     - target: {fileID: 6450849935960882217, guid: f9defbf1e4be3a14f8ee180a07d53ecd,
         type: 3}
       propertyPath: scaleUpDelay
-      value: 5.2
+      value: 4.2
       objectReference: {fileID: 0}
     - target: {fileID: 6450849935960882217, guid: f9defbf1e4be3a14f8ee180a07d53ecd,
         type: 3}
@@ -11640,7 +11663,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8450744154617442744, guid: db7b3b5ad58b7f544993112bd271bfdf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 97210425}
   m_SourcePrefab: {fileID: 100100000, guid: db7b3b5ad58b7f544993112bd271bfdf, type: 3}
 --- !u!1001 &901926494
 PrefabInstance:
