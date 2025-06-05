@@ -11661,7 +11661,8 @@ PrefabInstance:
       value: Glass
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4501420954219282691, guid: db7b3b5ad58b7f544993112bd271bfdf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8450744154617442744, guid: db7b3b5ad58b7f544993112bd271bfdf,
