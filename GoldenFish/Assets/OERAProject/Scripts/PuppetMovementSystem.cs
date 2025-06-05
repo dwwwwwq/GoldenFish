@@ -63,6 +63,7 @@ public class FixedZonePuppetMovement : MonoBehaviour
     private int stepCount = 0;
     private bool isDisabled; // 新增：是否已禁用状态
 
+
     void Start()
     {
         if (!leftZonePrefab || !rightZonePrefab)
@@ -93,6 +94,7 @@ public class FixedZonePuppetMovement : MonoBehaviour
         {
             leftZone.SetActive(false);
             rightZone.SetActive(false);
+            
             return;
         }
         else
