@@ -931,7 +931,6 @@ MonoBehaviour:
   m_Name: Android
   m_EditorClassIdentifier: 
   features:
-  - {fileID: -2942531005563343416}
   - {fileID: -1797918259605446312}
   - {fileID: -1289407970938113666}
   - {fileID: 1252474878485497944}
@@ -978,7 +977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_enabled: 1
   nameUi: PICO Support
-  version: 1.4.1
+  version: 1.3.3
   featureIdInternal: com.unity.openxr.feature.pico
   openxrExtensionStrings: 
   company: PICO
